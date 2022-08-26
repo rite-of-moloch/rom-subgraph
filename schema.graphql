@@ -1,96 +1,40 @@
-type ExampleEntity @entity {
+type Cohort @entity {
   id: ID!
-  count: BigInt!
-  cohortAddress: Bytes! # address
-  deployer: Bytes! # address
-}
-type Approval @entity {
-  id: ID!
-  owner: Bytes! # address
-  approved: Bytes! # address
-  tokenId: BigInt! # uint256
-}
-
-type ApprovalForAll @entity {
-  id: ID!
-  owner: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
+  deployer: Bytes! #address
+  dao: Bytes! #address
+  token: Bytes! #address
+  # treasury: Bytes! #address #
+  tokenAmount: BigInt! #uint256
+  sharesAmount: BigInt! #uint256
+  time: BigInt! #uint256 seconds for slash
+  createdAt: BigInt! #uint256 timestamp of creation
+  initiates: [Initiate!] @derivedFrom(field: "cohort")
 }
 
-type ChangedShares @entity {
+type Initiate @entity {
   id: ID!
-  newShare: BigInt! # uint256
+  benefactor: Bytes! #address of sponsor (if no sponsor it == id)
+  tokenId: BigInt! #uint256 id of SBT
+  stake: BigInt! #uint256
+  deadline: BigInt! #uint256
+  cohort: Cohort!
 }
 
-type ChangedStake @entity {
+type CryForHelp @entity {
   id: ID!
-  newStake: BigInt! # uint256
-}
-
-type ChangedTime @entity {
-  id: ID!
-  newTime: BigInt! # uint256
+  message: String!
+  sender: Bytes! #address. Not linked to Initiate because in theory anyone can call it
 }
 
 type Claim @entity {
   id: ID!
-  newMember: Bytes! # address
-  claimAmount: BigInt! # uint256
-}
-
-type Feedback @entity {
-  id: ID!
-  user: Bytes! # address
-  treasury: Bytes! # address
-  feedback: String! # string
-}
-
-type Initialized @entity {
-  id: ID!
-  version: Int! # uint8
-}
-
-type Initiation @entity {
-  id: ID!
-  newInitiate: Bytes! # address
-  benefactor: Bytes! # address
-  tokenId: BigInt! # uint256
-  stake: BigInt! # uint256
-  deadline: BigInt! # uint256
-}
-
-type RiteOfMolochRoleAdminChanged @entity {
-  id: ID!
-  role: Bytes! # bytes32
-  previousAdminRole: Bytes! # bytes32
-  newAdminRole: Bytes! # bytes32
-}
-
-type RiteOfMolochRoleGranted @entity {
-  id: ID!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
-}
-
-type RiteOfMolochRoleRevoked @entity {
-  id: ID!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
+  initiate: Initiate!
+  amount: BigInt! #uint256
 }
 
 type Sacrifice @entity {
   id: ID!
-  sacrifice: Bytes! # address
-  slashedAmount: BigInt! # uint256
+  initiate: Initiate! # address
+  amount: BigInt! # uint256
   slasher: Bytes! # address
-}
-
-type Transfer @entity {
-  id: ID!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
 }

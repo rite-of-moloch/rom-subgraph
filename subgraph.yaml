@@ -8,61 +8,40 @@ dataSources:
     source:
       address: "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003"
       abi: RiteOfMolochFactory
+      startBlock: 23861417 #(Block-1) the factory was created
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - NewRiteOfMoloch
-        - RoleAdminChanged
-        - RoleGranted
-        - RoleRevoked
+        - Cohort
       abis:
         - name: RiteOfMolochFactory
           file: ./abis/RiteOfMolochFactory.json
       eventHandlers:
         - event: NewRiteOfMoloch(address,address,address,address,address,uint256,uint256,uint256)
           handler: handleNewRiteOfMoloch
-        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleRoleAdminChanged
-        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
       file: ./src/rite-of-moloch-factory.ts
+templates:
   - kind: ethereum
     name: RiteOfMoloch
     network: xdai
     source:
-      address: "0x4589b0760baD5fAfBdAD8f3e8227991e8Ee99160"
+      # address: "0x4589b0760baD5fAfBdAD8f3e8227991e8Ee99160" #Address of the implementation
       abi: RiteOfMoloch
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - ChangedShares
-        - ChangedStake
-        - ChangedTime
+        - Initiate
+        - CryForHelp
         - Claim
-        - Feedback
-        - Initialized
-        - Initiation
-        - RiteOfMolochRoleAdminChanged
-        - RiteOfMolochRoleGranted
-        - RiteOfMolochRoleRevoked
         - Sacrifice
-        - Transfer
       abis:
         - name: RiteOfMoloch
           file: ./abis/RiteOfMoloch.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
         - event: ChangedShares(uint256)
           handler: handleChangedShares
         - event: ChangedStake(uint256)
@@ -73,18 +52,8 @@ dataSources:
           handler: handleClaim
         - event: Feedback(address,address,string)
           handler: handleFeedback
-        - event: Initialized(uint8)
-          handler: handleInitialized
         - event: Initiation(address,address,uint256,uint256,uint256)
           handler: handleInitiation
-        - event: RiteOfMolochRoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleRiteOfMolochRoleAdminChanged
-        - event: RiteOfMolochRoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRiteOfMolochRoleGranted
-        - event: RiteOfMolochRoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRiteOfMolochRoleRevoked
         - event: Sacrifice(address,uint256,address)
           handler: handleSacrifice
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
       file: ./src/rite-of-moloch.ts
