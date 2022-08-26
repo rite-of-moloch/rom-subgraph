@@ -2,6 +2,9 @@
   "xdai": {
     "RiteOfMolochFactory": {
       "address": "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003"
+    },
+    "RiteOfMoloch": {
+      "address": "0x4589b0760baD5fAfBdAD8f3e8227991e8Ee99160"
     }
   }
 }

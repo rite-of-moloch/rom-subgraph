@@ -4,3 +4,93 @@ type ExampleEntity @entity {
   cohortAddress: Bytes! # address
   deployer: Bytes! # address
 }
+type Approval @entity {
+  id: ID!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+}
+
+type ApprovalForAll @entity {
+  id: ID!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+}
+
+type ChangedShares @entity {
+  id: ID!
+  newShare: BigInt! # uint256
+}
+
+type ChangedStake @entity {
+  id: ID!
+  newStake: BigInt! # uint256
+}
+
+type ChangedTime @entity {
+  id: ID!
+  newTime: BigInt! # uint256
+}
+
+type Claim @entity {
+  id: ID!
+  newMember: Bytes! # address
+  claimAmount: BigInt! # uint256
+}
+
+type Feedback @entity {
+  id: ID!
+  user: Bytes! # address
+  treasury: Bytes! # address
+  feedback: String! # string
+}
+
+type Initialized @entity {
+  id: ID!
+  version: Int! # uint8
+}
+
+type Initiation @entity {
+  id: ID!
+  newInitiate: Bytes! # address
+  benefactor: Bytes! # address
+  tokenId: BigInt! # uint256
+  stake: BigInt! # uint256
+  deadline: BigInt! # uint256
+}
+
+type RiteOfMolochRoleAdminChanged @entity {
+  id: ID!
+  role: Bytes! # bytes32
+  previousAdminRole: Bytes! # bytes32
+  newAdminRole: Bytes! # bytes32
+}
+
+type RiteOfMolochRoleGranted @entity {
+  id: ID!
+  role: Bytes! # bytes32
+  account: Bytes! # address
+  sender: Bytes! # address
+}
+
+type RiteOfMolochRoleRevoked @entity {
+  id: ID!
+  role: Bytes! # bytes32
+  account: Bytes! # address
+  sender: Bytes! # address
+}
+
+type Sacrifice @entity {
+  id: ID!
+  sacrifice: Bytes! # address
+  slashedAmount: BigInt! # uint256
+  slasher: Bytes! # address
+}
+
+type Transfer @entity {
+  id: ID!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+}
