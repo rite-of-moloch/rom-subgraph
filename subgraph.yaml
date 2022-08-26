@@ -1,0 +1,32 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: RiteOfMolochFactory
+    network: xdai
+    source:
+      address: "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003"
+      abi: RiteOfMolochFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NewRiteOfMoloch
+        - RoleAdminChanged
+        - RoleGranted
+        - RoleRevoked
+      abis:
+        - name: RiteOfMolochFactory
+          file: ./abis/RiteOfMolochFactory.json
+      eventHandlers:
+        - event: NewRiteOfMoloch(address,address,address,address,address,uint256,uint256,uint256)
+          handler: handleNewRiteOfMoloch
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+      file: ./src/rite-of-moloch-factory.ts
