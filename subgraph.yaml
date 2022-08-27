@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: RiteOfMolochFactory
-    network: xdai
+    network: rinkeby #xdai
     source:
-      address: "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003"
+      address: "0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1" #"0xBb7353efB505D63408D1C762A5C3A1636E9Ca003"
       abi: RiteOfMolochFactory
-      startBlock: 23861417 #(Block-1) the factory was created
+      startBlock: 11184035 #23861417 #(Block-1) the factory was created
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -25,7 +25,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: RiteOfMoloch
-    network: xdai
+    network: rinkeby #xdai
     source:
       # address: "0x4589b0760baD5fAfBdAD8f3e8227991e8Ee99160" #Address of the implementation
       abi: RiteOfMoloch

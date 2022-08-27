@@ -1,4 +1,3 @@
-//import { DataSourceContext } from "@graphprotocol/graph-ts"
 import {
   NewRiteOfMoloch,
 } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory"
@@ -15,6 +14,7 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   cohort.sharesAmount = event.params.threshold
   cohort.time = event.params.time
   cohort.createdAt = event.block.timestamp
+  cohort.implementation = event.params.implementation;
 
   cohort.save();
   RiteOfMoloch.create(event.params.cohortAddress);

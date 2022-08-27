@@ -3,12 +3,15 @@ type Cohort @entity {
   deployer: Bytes! #address
   dao: Bytes! #address
   token: Bytes! #address
-  # treasury: Bytes! #address #
+  implementation: Bytes! #address
   tokenAmount: BigInt! #uint256
   sharesAmount: BigInt! #uint256
   time: BigInt! #uint256 seconds for slash
   createdAt: BigInt! #uint256 timestamp of creation
   initiates: [Initiate!] @derivedFrom(field: "cohort")
+  criesForHelp: [CryForHelp!] @derivedFrom(field: "cohort")
+  claims: [Claim!] @derivedFrom(field: "cohort")
+  Sacrifices: [Sacrifice!] @derivedFrom(field: "cohort")
 }
 
 type Initiate @entity {
@@ -23,13 +26,15 @@ type Initiate @entity {
 type CryForHelp @entity {
   id: ID!
   message: String!
-  sender: Bytes! #address. Not linked to Initiate because in theory anyone can call it
+  sender: Initiate!
+  cohort: Cohort!
 }
 
 type Claim @entity {
   id: ID!
   initiate: Initiate!
   amount: BigInt! #uint256
+  cohort: Cohort!
 }
 
 type Sacrifice @entity {
@@ -37,4 +42,5 @@ type Sacrifice @entity {
   initiate: Initiate! # address
   amount: BigInt! # uint256
   slasher: Bytes! # address
+  cohort: Cohort!
 }

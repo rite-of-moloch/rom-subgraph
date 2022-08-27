@@ -69,6 +69,15 @@ export class Cohort extends Entity {
     this.set("token", Value.fromBytes(value));
   }
 
+  get implementation(): Bytes {
+    let value = this.get("implementation");
+    return value!.toBytes();
+  }
+
+  set implementation(value: Bytes) {
+    this.set("implementation", Value.fromBytes(value));
+  }
+
   get tokenAmount(): BigInt {
     let value = this.get("tokenAmount");
     return value!.toBigInt();
@@ -105,13 +114,72 @@ export class Cohort extends Entity {
     this.set("createdAt", Value.fromBigInt(value));
   }
 
-  get initiates(): Array<string> {
+  get initiates(): Array<string> | null {
     let value = this.get("initiates");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set initiates(value: Array<string>) {
-    this.set("initiates", Value.fromStringArray(value));
+  set initiates(value: Array<string> | null) {
+    if (!value) {
+      this.unset("initiates");
+    } else {
+      this.set("initiates", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get criesForHelp(): Array<string> | null {
+    let value = this.get("criesForHelp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set criesForHelp(value: Array<string> | null) {
+    if (!value) {
+      this.unset("criesForHelp");
+    } else {
+      this.set("criesForHelp", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get claims(): Array<string> | null {
+    let value = this.get("claims");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set claims(value: Array<string> | null) {
+    if (!value) {
+      this.unset("claims");
+    } else {
+      this.set("claims", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get Sacrifices(): Array<string> | null {
+    let value = this.get("Sacrifices");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set Sacrifices(value: Array<string> | null) {
+    if (!value) {
+      this.unset("Sacrifices");
+    } else {
+      this.set("Sacrifices", Value.fromStringArray(<Array<string>>value));
+    }
   }
 }
 
@@ -232,13 +300,22 @@ export class CryForHelp extends Entity {
     this.set("message", Value.fromString(value));
   }
 
-  get sender(): Bytes {
+  get sender(): string {
     let value = this.get("sender");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set sender(value: Bytes) {
-    this.set("sender", Value.fromBytes(value));
+  set sender(value: string) {
+    this.set("sender", Value.fromString(value));
+  }
+
+  get cohort(): string {
+    let value = this.get("cohort");
+    return value!.toString();
+  }
+
+  set cohort(value: string) {
+    this.set("cohort", Value.fromString(value));
   }
 }
 
@@ -289,6 +366,15 @@ export class Claim extends Entity {
 
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
+  }
+
+  get cohort(): string {
+    let value = this.get("cohort");
+    return value!.toString();
+  }
+
+  set cohort(value: string) {
+    this.set("cohort", Value.fromString(value));
   }
 }
 
@@ -348,5 +434,14 @@ export class Sacrifice extends Entity {
 
   set slasher(value: Bytes) {
     this.set("slasher", Value.fromBytes(value));
+  }
+
+  get cohort(): string {
+    let value = this.get("cohort");
+    return value!.toString();
+  }
+
+  set cohort(value: string) {
+    this.set("cohort", Value.fromString(value));
   }
 }
