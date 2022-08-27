@@ -105,6 +105,15 @@ export class Cohort extends Entity {
     this.set("time", Value.fromBigInt(value));
   }
 
+  get treasury(): Bytes {
+    let value = this.get("treasury");
+    return value!.toBytes();
+  }
+
+  set treasury(value: Bytes) {
+    this.set("treasury", Value.fromBytes(value));
+  }
+
   get createdAt(): BigInt {
     let value = this.get("createdAt");
     return value!.toBigInt();
@@ -214,6 +223,15 @@ export class Initiate extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get address(): Bytes {
+    let value = this.get("address");
+    return value!.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
   get benefactor(): Bytes {
     let value = this.get("benefactor");
     return value!.toBytes();
@@ -248,6 +266,15 @@ export class Initiate extends Entity {
 
   set deadline(value: BigInt) {
     this.set("deadline", Value.fromBigInt(value));
+  }
+
+  get joinedAt(): BigInt {
+    let value = this.get("joinedAt");
+    return value!.toBigInt();
+  }
+
+  set joinedAt(value: BigInt) {
+    this.set("joinedAt", Value.fromBigInt(value));
   }
 
   get cohort(): string {

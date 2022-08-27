@@ -68,8 +68,8 @@ export function handleFeedback(event: FeedbackEvent): void {
   let cryForHelp = new CryForHelp(event.transaction.hash.toHex());
 
   cryForHelp.message = event.params.feedback;
-  cryForHelp.sender = event.params.user.toHex();
   if (cohort) {
+    cryForHelp.sender = event.params.user.toHex()+"-"+cohort.id; //Id of Initiate
     cryForHelp.cohort = cohort.id;
   }
 
@@ -79,12 +79,16 @@ export function handleFeedback(event: FeedbackEvent): void {
 export function handleInitiation(event: InitiationEvent): void {
   let cohort = Cohort.load(event.address.toHex());
 
-  let initiate = new Initiate(event.params.newInitiate.toHex());
+  //Using InitiateAdress-CohortAddress as id to support multiple cohorts per initiate
+  let initiate = new Initiate(event.params.newInitiate.toHex() + "-" + event.address.toHex());
+  //let initiate = new Initiate(event.params.newInitiate.toHex());
 
+  initiate.address = event.params.newInitiate;
   initiate.benefactor = event.params.benefactor;
   initiate.tokenId = event.params.tokenId;
   initiate.stake = event.params.stake;
   initiate.deadline = event.params.deadline;
+  initiate.joinedAt = event.block.timestamp;
   if (cohort) { //Should always be true. Just necessary for Typescript
     initiate.cohort = cohort.id;
   }

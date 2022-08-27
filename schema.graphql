@@ -7,6 +7,7 @@ type Cohort @entity {
   tokenAmount: BigInt! #uint256
   sharesAmount: BigInt! #uint256
   time: BigInt! #uint256 seconds for slash
+  treasury: Bytes! #address
   createdAt: BigInt! #uint256 timestamp of creation
   initiates: [Initiate!] @derivedFrom(field: "cohort")
   criesForHelp: [CryForHelp!] @derivedFrom(field: "cohort")
@@ -15,11 +16,13 @@ type Cohort @entity {
 }
 
 type Initiate @entity {
-  id: ID!
+  id: ID! #address + cohort (to support multiple cohorts per same address)
+  address: Bytes! #address
   benefactor: Bytes! #address of sponsor (if no sponsor it == id)
   tokenId: BigInt! #uint256 id of SBT
   stake: BigInt! #uint256
   deadline: BigInt! #uint256
+  joinedAt: BigInt! #uint256 block timestamp when joined
   cohort: Cohort!
 }
 

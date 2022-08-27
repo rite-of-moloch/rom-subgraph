@@ -18,6 +18,8 @@ dataSources:
       abis:
         - name: RiteOfMolochFactory
           file: ./abis/RiteOfMolochFactory.json
+        - name: RiteOfMoloch
+          file: ./abis/RiteOfMoloch.json
       eventHandlers:
         - event: NewRiteOfMoloch(address,address,address,address,address,uint256,uint256,uint256)
           handler: handleNewRiteOfMoloch
