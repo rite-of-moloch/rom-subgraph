@@ -285,6 +285,58 @@ export class Initiate extends Entity {
   set cohort(value: string) {
     this.set("cohort", Value.fromString(value));
   }
+
+  get claimed(): boolean {
+    let value = this.get("claimed");
+    return value!.toBoolean();
+  }
+
+  set claimed(value: boolean) {
+    this.set("claimed", Value.fromBoolean(value));
+  }
+
+  get claim(): string | null {
+    let value = this.get("claim");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set claim(value: string | null) {
+    if (!value) {
+      this.unset("claim");
+    } else {
+      this.set("claim", Value.fromString(<string>value));
+    }
+  }
+
+  get sacrificed(): boolean {
+    let value = this.get("sacrificed");
+    return value!.toBoolean();
+  }
+
+  set sacrificed(value: boolean) {
+    this.set("sacrificed", Value.fromBoolean(value));
+  }
+
+  get sacrifice(): string | null {
+    let value = this.get("sacrifice");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set sacrifice(value: string | null) {
+    if (!value) {
+      this.unset("sacrifice");
+    } else {
+      this.set("sacrifice", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class CryForHelp extends Entity {

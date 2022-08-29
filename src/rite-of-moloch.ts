@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import {
   ChangedShares as ChangedSharesEvent,
   ChangedStake as ChangedStakeEvent,
@@ -53,10 +54,17 @@ export function handleClaim(event: ClaimEvent): void {
   let cohort = Cohort.load(event.address.toHex());
 
   let claim = new Claim(event.transaction.hash.toHex())
+  let initiate = Initiate.load(event.params.newMember.toHex());
 
-  claim.initiate = event.params.newMember.toHex(); //initiate.id;
   claim.amount = event.params.claimAmount;
+
+  if (initiate) {
+    initiate.claimed = true;
+    initiate.stake = new BigInt(0);
+  }
+
   if (cohort) {
+    claim.initiate = event.params.newMember.toHex() + '-' + cohort.id; //initiate.id;
     claim.cohort = cohort.id;
   }
   claim.save();
@@ -69,7 +77,7 @@ export function handleFeedback(event: FeedbackEvent): void {
 
   cryForHelp.message = event.params.feedback;
   if (cohort) {
-    cryForHelp.sender = event.params.user.toHex()+"-"+cohort.id; //Id of Initiate
+    cryForHelp.sender = event.params.user.toHex() + "-" + cohort.id; //Id of Initiate
     cryForHelp.cohort = cohort.id;
   }
 
@@ -89,6 +97,9 @@ export function handleInitiation(event: InitiationEvent): void {
   initiate.stake = event.params.stake;
   initiate.deadline = event.params.deadline;
   initiate.joinedAt = event.block.timestamp;
+  initiate.claimed = false;
+  initiate.sacrificed = false;
+
   if (cohort) { //Should always be true. Just necessary for Typescript
     initiate.cohort = cohort.id;
   }
@@ -99,12 +110,18 @@ export function handleSacrifice(event: SacrificeEvent): void {
   let cohort = Cohort.load(event.address.toHex());
 
   let sacrifice = new Sacrifice(event.transaction.hash.toHex());
+  let initiate = Initiate.load(event.params.sacrifice.toHex());
 
-  sacrifice.initiate = event.params.sacrifice.toHex();
   sacrifice.amount = event.params.slashedAmount;
   sacrifice.slasher = event.params.slasher;
 
+  if (initiate) {
+    initiate.sacrificed = true;
+    initiate.stake = new BigInt(0);
+  }
+
   if (cohort) {
+    sacrifice.initiate = event.params.sacrifice.toHex() + '-' + cohort.id;
     sacrifice.cohort = cohort.id;
   }
 

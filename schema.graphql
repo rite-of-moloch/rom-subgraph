@@ -24,6 +24,10 @@ type Initiate @entity {
   deadline: BigInt! #uint256
   joinedAt: BigInt! #uint256 block timestamp when joined
   cohort: Cohort!
+  claimed: Boolean!
+  claim: Claim @derivedFrom(field: "initiate")
+  sacrificed: Boolean!
+  sacrifice: Sacrifice @derivedFrom(field: "initiate")
 }
 
 type CryForHelp @entity {
