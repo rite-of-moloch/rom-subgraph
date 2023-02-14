@@ -23,7 +23,7 @@ export class NewRiteOfMoloch__Params {
     this._event = event;
   }
 
-  get cohortAddress(): Address {
+  get cohortContract(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
@@ -39,20 +39,28 @@ export class NewRiteOfMoloch__Params {
     return this._event.parameters[3].value.toAddress();
   }
 
-  get stakeToken(): Address {
+  get stakingAsset(): Address {
     return this._event.parameters[4].value.toAddress();
   }
 
-  get stakeAmount(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
+  get treasury(): Address {
+    return this._event.parameters[5].value.toAddress();
+  }
+
+  get topHatWearer(): Address {
+    return this._event.parameters[6].value.toAddress();
   }
 
   get threshold(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
+    return this._event.parameters[7].value.toBigInt();
   }
 
-  get time(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
+  get assetAmount(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
+  }
+
+  get stakeDuration(): BigInt {
+    return this._event.parameters[9].value.toBigInt();
   }
 }
 
