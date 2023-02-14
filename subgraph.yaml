@@ -6,9 +6,9 @@ dataSources:
     name: RiteOfMolochFactory
     network: goerli
     source:
-      address: "0xbFB48FF8727a4A140f4c1fA012A6AE1d47E8A6B5" #"0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1"
+      address: "0xf8edb679b7d994fc8bf93502d69d31c23d94181f" #"0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1"
       abi: RiteOfMolochFactory
-      startBlock: 8146682 #8146681 #(Block-1) the factory was created
+      startBlock: 8489000 #8489001 #(Block-1) the factory was created
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -21,7 +21,7 @@ dataSources:
         - name: RiteOfMoloch
           file: ./abis/RiteOfMoloch.json
       eventHandlers:
-        - event: NewRiteOfMoloch(address,address,address,address,address,address,address,uint256,uint256,uint256)
+        - event: NewRiteOfMoloch(address,address,address,address,address,address,uint256,uint256,uint256,string)
           handler: handleNewRiteOfMoloch
       file: ./src/rite-of-moloch-factory.ts
 templates:

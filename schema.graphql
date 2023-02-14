@@ -3,6 +3,7 @@ type Cohort @entity {
   deployer: Bytes! #address
   dao: Bytes! #address
   token: Bytes! #address
+  sbtUrl: String! #string
   implementation: Bytes! #address
   tokenAmount: BigInt! #uint256
   sharesAmount: BigInt! #uint256

@@ -16,6 +16,7 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   cohort.time = event.params.threshold
   cohort.createdAt = event.block.timestamp
   cohort.implementation = event.params.implementation;
+  cohort.sbtUrl = event.params.sbtUrl;
 
   //Get treasury directly from contract because event params doesn't have it
   let contract = RiteOfMolochContract.bind(event.params.cohortContract);

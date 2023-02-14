@@ -10,6 +10,28 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class HatsContractChanged extends ethereum.Event {
+  get params(): HatsContractChanged__Params {
+    return new HatsContractChanged__Params(this);
+  }
+}
+
+export class HatsContractChanged__Params {
+  _event: HatsContractChanged;
+
+  constructor(event: HatsContractChanged) {
+    this._event = event;
+  }
+
+  get previousHatsContract(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newHatsContract(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class NewRiteOfMoloch extends ethereum.Event {
   get params(): NewRiteOfMoloch__Params {
     return new NewRiteOfMoloch__Params(this);
@@ -47,20 +69,20 @@ export class NewRiteOfMoloch__Params {
     return this._event.parameters[5].value.toAddress();
   }
 
-  get topHatWearer(): Address {
-    return this._event.parameters[6].value.toAddress();
-  }
-
   get threshold(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
+    return this._event.parameters[6].value.toBigInt();
   }
 
   get assetAmount(): BigInt {
-    return this._event.parameters[8].value.toBigInt();
+    return this._event.parameters[7].value.toBigInt();
   }
 
   get stakeDuration(): BigInt {
-    return this._event.parameters[9].value.toBigInt();
+    return this._event.parameters[8].value.toBigInt();
+  }
+
+  get sbtUrl(): string {
+    return this._event.parameters[9].value.toString();
   }
 }
 
@@ -107,12 +129,38 @@ export class RoleGranted__Params {
     return this._event.parameters[0].value.toBytes();
   }
 
-  get account(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get hat(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get sender(): Address {
     return this._event.parameters[2].value.toAddress();
+  }
+}
+
+export class RoleHatChanged extends ethereum.Event {
+  get params(): RoleHatChanged__Params {
+    return new RoleHatChanged__Params(this);
+  }
+}
+
+export class RoleHatChanged__Params {
+  _event: RoleHatChanged;
+
+  constructor(event: RoleHatChanged) {
+    this._event = event;
+  }
+
+  get role(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get previousRoleHat(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get newRoleHat(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -133,8 +181,8 @@ export class RoleRevoked__Params {
     return this._event.parameters[0].value.toBytes();
   }
 
-  get account(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get hat(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get sender(): Address {
@@ -155,49 +203,62 @@ export class RiteOfMolochFactory__createCohortInputInitDataStruct extends ethere
     return this[2].toAddress();
   }
 
-  get threshold(): BigInt {
-    return this[3].toBigInt();
+  get admin1(): Address {
+    return this[3].toAddress();
   }
 
-  get assetAmount(): BigInt {
-    return this[4].toBigInt();
+  get admin2(): Address {
+    return this[4].toAddress();
   }
 
-  get duration(): BigInt {
+  get cohortSize(): BigInt {
     return this[5].toBigInt();
   }
 
-  get name(): string {
-    return this[6].toString();
+  get joinDuration(): BigInt {
+    return this[6].toBigInt();
   }
 
-  get symbol(): string {
-    return this[7].toString();
+  get threshold(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get assetAmount(): BigInt {
+    return this[8].toBigInt();
+  }
+
+  get stakeDuration(): BigInt {
+    return this[9].toBigInt();
+  }
+
+  get topHatId(): BigInt {
+    return this[10].toBigInt();
+  }
+
+  get cohortName(): string {
+    return this[11].toString();
+  }
+
+  get sbtName(): string {
+    return this[12].toString();
+  }
+
+  get sbtSymbol(): string {
+    return this[13].toString();
   }
 
   get baseUri(): string {
-    return this[8].toString();
+    return this[14].toString();
+  }
+
+  get shamanOn(): boolean {
+    return this[15].toBoolean();
   }
 }
 
 export class RiteOfMolochFactory extends ethereum.SmartContract {
   static bind(address: Address): RiteOfMolochFactory {
     return new RiteOfMolochFactory("RiteOfMolochFactory", address);
-  }
-
-  ADMIN(): Bytes {
-    let result = super.call("ADMIN", "ADMIN():(bytes32)", []);
-
-    return result[0].toBytes();
-  }
-
-  try_ADMIN(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall("ADMIN", "ADMIN():(bytes32)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
   DEFAULT_ADMIN_ROLE(): Bytes {
@@ -223,13 +284,36 @@ export class RiteOfMolochFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  FACTORY_OPERATOR(): Bytes {
+    let result = super.call(
+      "FACTORY_OPERATOR",
+      "FACTORY_OPERATOR():(bytes32)",
+      []
+    );
+
+    return result[0].toBytes();
+  }
+
+  try_FACTORY_OPERATOR(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "FACTORY_OPERATOR",
+      "FACTORY_OPERATOR():(bytes32)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
   createCohort(
     initData: RiteOfMolochFactory__createCohortInputInitDataStruct,
     implementationSelector: BigInt
   ): Address {
     let result = super.call(
       "createCohort",
-      "createCohort((address,address,address,uint256,uint256,uint256,string,string,string),uint256):(address)",
+      "createCohort((address,address,address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,string,string,string,string,bool),uint256):(address)",
       [
         ethereum.Value.fromTuple(initData),
         ethereum.Value.fromUnsignedBigInt(implementationSelector)
@@ -245,7 +329,7 @@ export class RiteOfMolochFactory extends ethereum.SmartContract {
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "createCohort",
-      "createCohort((address,address,address,uint256,uint256,uint256,string,string,string),uint256):(address)",
+      "createCohort((address,address,address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,string,string,string,string,bool),uint256):(address)",
       [
         ethereum.Value.fromTuple(initData),
         ethereum.Value.fromUnsignedBigInt(implementationSelector)
@@ -256,6 +340,29 @@ export class RiteOfMolochFactory extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  factoryOperatorHat(): BigInt {
+    let result = super.call(
+      "factoryOperatorHat",
+      "factoryOperatorHat():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_factoryOperatorHat(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "factoryOperatorHat",
+      "factoryOperatorHat():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getRoleAdmin(role: Bytes): Bytes {
@@ -300,6 +407,36 @@ export class RiteOfMolochFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  hatsContract(): Address {
+    let result = super.call("hatsContract", "hatsContract():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_hatsContract(): ethereum.CallResult<Address> {
+    let result = super.tryCall("hatsContract", "hatsContract():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  hatsProtocol(): Address {
+    let result = super.call("hatsProtocol", "hatsProtocol():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_hatsProtocol(): ethereum.CallResult<Address> {
+    let result = super.tryCall("hatsProtocol", "hatsProtocol():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   iid(): BigInt {
     let result = super.call("iid", "iid():(uint256)", []);
 
@@ -337,29 +474,6 @@ export class RiteOfMolochFactory extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
-
-  supportsInterface(interfaceId: Bytes): boolean {
-    let result = super.call(
-      "supportsInterface",
-      "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_supportsInterface(interfaceId: Bytes): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "supportsInterface",
-      "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
 }
 
 export class ConstructorCall extends ethereum.Call {
@@ -377,6 +491,14 @@ export class ConstructorCall__Inputs {
 
   constructor(call: ConstructorCall) {
     this._call = call;
+  }
+
+  get _hatsProtocol(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _factoryOperatorHat(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 
@@ -414,6 +536,100 @@ export class AddImplementationCall__Outputs {
   _call: AddImplementationCall;
 
   constructor(call: AddImplementationCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeHatsContractCall extends ethereum.Call {
+  get inputs(): ChangeHatsContractCall__Inputs {
+    return new ChangeHatsContractCall__Inputs(this);
+  }
+
+  get outputs(): ChangeHatsContractCall__Outputs {
+    return new ChangeHatsContractCall__Outputs(this);
+  }
+}
+
+export class ChangeHatsContractCall__Inputs {
+  _call: ChangeHatsContractCall;
+
+  constructor(call: ChangeHatsContractCall) {
+    this._call = call;
+  }
+
+  get newHatsContract(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class ChangeHatsContractCall__Outputs {
+  _call: ChangeHatsContractCall;
+
+  constructor(call: ChangeHatsContractCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeHatsProtocolCall extends ethereum.Call {
+  get inputs(): ChangeHatsProtocolCall__Inputs {
+    return new ChangeHatsProtocolCall__Inputs(this);
+  }
+
+  get outputs(): ChangeHatsProtocolCall__Outputs {
+    return new ChangeHatsProtocolCall__Outputs(this);
+  }
+}
+
+export class ChangeHatsProtocolCall__Inputs {
+  _call: ChangeHatsProtocolCall;
+
+  constructor(call: ChangeHatsProtocolCall) {
+    this._call = call;
+  }
+
+  get _hatsProtocol(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class ChangeHatsProtocolCall__Outputs {
+  _call: ChangeHatsProtocolCall;
+
+  constructor(call: ChangeHatsProtocolCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeRoleHatCall extends ethereum.Call {
+  get inputs(): ChangeRoleHatCall__Inputs {
+    return new ChangeRoleHatCall__Inputs(this);
+  }
+
+  get outputs(): ChangeRoleHatCall__Outputs {
+    return new ChangeRoleHatCall__Outputs(this);
+  }
+}
+
+export class ChangeRoleHatCall__Inputs {
+  _call: ChangeRoleHatCall;
+
+  constructor(call: ChangeRoleHatCall) {
+    this._call = call;
+  }
+
+  get role(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get newRoleHat(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class ChangeRoleHatCall__Outputs {
+  _call: ChangeRoleHatCall;
+
+  constructor(call: ChangeRoleHatCall) {
     this._call = call;
   }
 }
@@ -471,28 +687,56 @@ export class CreateCohortCallInitDataStruct extends ethereum.Tuple {
     return this[2].toAddress();
   }
 
-  get threshold(): BigInt {
-    return this[3].toBigInt();
+  get admin1(): Address {
+    return this[3].toAddress();
   }
 
-  get assetAmount(): BigInt {
-    return this[4].toBigInt();
+  get admin2(): Address {
+    return this[4].toAddress();
   }
 
-  get duration(): BigInt {
+  get cohortSize(): BigInt {
     return this[5].toBigInt();
   }
 
-  get name(): string {
-    return this[6].toString();
+  get joinDuration(): BigInt {
+    return this[6].toBigInt();
   }
 
-  get symbol(): string {
-    return this[7].toString();
+  get threshold(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get assetAmount(): BigInt {
+    return this[8].toBigInt();
+  }
+
+  get stakeDuration(): BigInt {
+    return this[9].toBigInt();
+  }
+
+  get topHatId(): BigInt {
+    return this[10].toBigInt();
+  }
+
+  get cohortName(): string {
+    return this[11].toString();
+  }
+
+  get sbtName(): string {
+    return this[12].toString();
+  }
+
+  get sbtSymbol(): string {
+    return this[13].toString();
   }
 
   get baseUri(): string {
-    return this[8].toString();
+    return this[14].toString();
+  }
+
+  get shamanOn(): boolean {
+    return this[15].toBoolean();
   }
 }
 
@@ -517,8 +761,8 @@ export class GrantRoleCall__Inputs {
     return this._call.inputValues[0].value.toBytes();
   }
 
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
+  get hat(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 
@@ -526,40 +770,6 @@ export class GrantRoleCall__Outputs {
   _call: GrantRoleCall;
 
   constructor(call: GrantRoleCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceRoleCall extends ethereum.Call {
-  get inputs(): RenounceRoleCall__Inputs {
-    return new RenounceRoleCall__Inputs(this);
-  }
-
-  get outputs(): RenounceRoleCall__Outputs {
-    return new RenounceRoleCall__Outputs(this);
-  }
-}
-
-export class RenounceRoleCall__Inputs {
-  _call: RenounceRoleCall;
-
-  constructor(call: RenounceRoleCall) {
-    this._call = call;
-  }
-
-  get role(): Bytes {
-    return this._call.inputValues[0].value.toBytes();
-  }
-
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class RenounceRoleCall__Outputs {
-  _call: RenounceRoleCall;
-
-  constructor(call: RenounceRoleCall) {
     this._call = call;
   }
 }
@@ -585,8 +795,8 @@ export class RevokeRoleCall__Inputs {
     return this._call.inputValues[0].value.toBytes();
   }
 
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
+  get hat(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 

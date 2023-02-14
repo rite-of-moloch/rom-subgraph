@@ -69,6 +69,15 @@ export class Cohort extends Entity {
     this.set("token", Value.fromBytes(value));
   }
 
+  get sbtUrl(): string {
+    let value = this.get("sbtUrl");
+    return value!.toString();
+  }
+
+  set sbtUrl(value: string) {
+    this.set("sbtUrl", Value.fromString(value));
+  }
+
   get implementation(): Bytes {
     let value = this.get("implementation");
     return value!.toBytes();
