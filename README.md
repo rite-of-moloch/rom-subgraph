@@ -10,4 +10,4 @@ graph deploy --studio rom-test
 ```
 
 
-Last endpoint: https://api.studio.thegraph.com/query/40280/rom-test/v0.0.5
+Last endpoint: https://api.studio.thegraph.com/query/40280/rom-test/v0.0.17
