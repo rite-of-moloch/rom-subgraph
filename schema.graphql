@@ -1,6 +1,8 @@
 type Cohort @entity {
   id: ID!
   deployer: Bytes! #address
+  admin1: Bytes! #address
+  admin2: Bytes! #address
   dao: Bytes! #address
   token: Bytes! #address
   sbtUrl: String! #string
@@ -14,6 +16,11 @@ type Cohort @entity {
   criesForHelp: [CryForHelp!] @derivedFrom(field: "cohort")
   claims: [Claim!] @derivedFrom(field: "cohort")
   Sacrifices: [Sacrifice!] @derivedFrom(field: "cohort")
+
+  totalMembers: BigInt!
+  claimedMembers: BigInt!
+  slashedMembers: BigInt!
+  successPercentage: BigDecimal!
 }
 
 type Initiate @entity {
@@ -51,4 +58,17 @@ type Sacrifice @entity {
   amount: BigInt! # uint256
   slasher: Bytes! # address
   cohort: Cohort!
+}
+
+
+type Metric @entity {
+  id: ID!
+  totalCohorts: BigInt! # uint256
+  totalMembers: BigInt!
+  claimedMembers: BigInt!
+  slashedMembers: BigInt!
+
+  slashRate: BigDecimal! #should be a float? 
+  claimRate: BigDecimal!
+  averageCohortSize: BigDecimal!
 }

@@ -51,6 +51,24 @@ export class Cohort extends Entity {
     this.set("deployer", Value.fromBytes(value));
   }
 
+  get admin1(): Bytes {
+    let value = this.get("admin1");
+    return value!.toBytes();
+  }
+
+  set admin1(value: Bytes) {
+    this.set("admin1", Value.fromBytes(value));
+  }
+
+  get admin2(): Bytes {
+    let value = this.get("admin2");
+    return value!.toBytes();
+  }
+
+  set admin2(value: Bytes) {
+    this.set("admin2", Value.fromBytes(value));
+  }
+
   get dao(): Bytes {
     let value = this.get("dao");
     return value!.toBytes();
@@ -198,6 +216,42 @@ export class Cohort extends Entity {
     } else {
       this.set("Sacrifices", Value.fromStringArray(<Array<string>>value));
     }
+  }
+
+  get totalMembers(): BigInt {
+    let value = this.get("totalMembers");
+    return value!.toBigInt();
+  }
+
+  set totalMembers(value: BigInt) {
+    this.set("totalMembers", Value.fromBigInt(value));
+  }
+
+  get claimedMembers(): BigInt {
+    let value = this.get("claimedMembers");
+    return value!.toBigInt();
+  }
+
+  set claimedMembers(value: BigInt) {
+    this.set("claimedMembers", Value.fromBigInt(value));
+  }
+
+  get slashedMembers(): BigInt {
+    let value = this.get("slashedMembers");
+    return value!.toBigInt();
+  }
+
+  set slashedMembers(value: BigInt) {
+    this.set("slashedMembers", Value.fromBigInt(value));
+  }
+
+  get successPercentage(): BigDecimal {
+    let value = this.get("successPercentage");
+    return value!.toBigDecimal();
+  }
+
+  set successPercentage(value: BigDecimal) {
+    this.set("successPercentage", Value.fromBigDecimal(value));
   }
 }
 
@@ -531,5 +585,100 @@ export class Sacrifice extends Entity {
 
   set cohort(value: string) {
     this.set("cohort", Value.fromString(value));
+  }
+}
+
+export class Metric extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Metric entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Metric must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Metric", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Metric | null {
+    return changetype<Metric | null>(store.get("Metric", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get totalCohorts(): BigInt {
+    let value = this.get("totalCohorts");
+    return value!.toBigInt();
+  }
+
+  set totalCohorts(value: BigInt) {
+    this.set("totalCohorts", Value.fromBigInt(value));
+  }
+
+  get totalMembers(): BigInt {
+    let value = this.get("totalMembers");
+    return value!.toBigInt();
+  }
+
+  set totalMembers(value: BigInt) {
+    this.set("totalMembers", Value.fromBigInt(value));
+  }
+
+  get claimedMembers(): BigInt {
+    let value = this.get("claimedMembers");
+    return value!.toBigInt();
+  }
+
+  set claimedMembers(value: BigInt) {
+    this.set("claimedMembers", Value.fromBigInt(value));
+  }
+
+  get slashedMembers(): BigInt {
+    let value = this.get("slashedMembers");
+    return value!.toBigInt();
+  }
+
+  set slashedMembers(value: BigInt) {
+    this.set("slashedMembers", Value.fromBigInt(value));
+  }
+
+  get slashRate(): BigDecimal {
+    let value = this.get("slashRate");
+    return value!.toBigDecimal();
+  }
+
+  set slashRate(value: BigDecimal) {
+    this.set("slashRate", Value.fromBigDecimal(value));
+  }
+
+  get claimRate(): BigDecimal {
+    let value = this.get("claimRate");
+    return value!.toBigDecimal();
+  }
+
+  set claimRate(value: BigDecimal) {
+    this.set("claimRate", Value.fromBigDecimal(value));
+  }
+
+  get averageCohortSize(): BigDecimal {
+    let value = this.get("averageCohortSize");
+    return value!.toBigDecimal();
+  }
+
+  set averageCohortSize(value: BigDecimal) {
+    this.set("averageCohortSize", Value.fromBigDecimal(value));
   }
 }
