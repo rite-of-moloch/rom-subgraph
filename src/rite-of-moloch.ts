@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import {
   ChangedShares as ChangedSharesEvent,
   ChangedStake as ChangedStakeEvent,
@@ -13,7 +13,8 @@ import {
   Sacrifice,
   Claim,
   CryForHelp,
-  Cohort
+  Cohort,
+  Metric
 } from "../generated/schema"
 
 export function handleChangedShares(event: ChangedSharesEvent): void {
@@ -66,8 +67,27 @@ export function handleClaim(event: ClaimEvent): void {
   if (cohort) {
     claim.initiate = event.params.newMember.toHex() + '-' + cohort.id; //initiate.id;
     claim.cohort = cohort.id;
+
+    let newClaimedMembers = cohort.claimedMembers.plus(BigInt.fromI32(1));
+
+    cohort.claimedMembers = newClaimedMembers;
+    cohort.successPercentage = BigDecimal.fromString(newClaimedMembers.toString()).div(BigDecimal.fromString(cohort.totalMembers.toString())).times(BigDecimal.fromString("100.0"));
+    cohort.save();
   }
   claim.save();
+
+  let metrics = Metric.load("0");
+  if (metrics) {
+    let newClaimedMembers = metrics.claimedMembers.plus(BigInt.fromI32(1));
+    metrics.claimedMembers = newClaimedMembers;
+
+    if(metrics.totalMembers.notEqual(BigInt.fromI32(0))) {
+      metrics.claimRate = BigDecimal.fromString(newClaimedMembers.toString()).div(BigDecimal.fromString(metrics.totalMembers.toString())).times(BigDecimal.fromString("100.0"));;
+    }
+    
+    metrics.save();
+  }
+  
 }
 
 export function handleFeedback(event: FeedbackEvent): void {
@@ -102,8 +122,31 @@ export function handleInitiation(event: InitiationEvent): void {
 
   if (cohort) { //Should always be true. Just necessary for Typescript
     initiate.cohort = cohort.id;
+
+    let newTotalMembers = cohort.totalMembers.plus(BigInt.fromI32(1));
+
+    cohort.totalMembers = newTotalMembers;
+    cohort.successPercentage = BigDecimal.fromString(cohort.claimedMembers.toString()).div(BigDecimal.fromString(newTotalMembers.toString())).times(BigDecimal.fromString("100.0"));
+    cohort.save();
   }
   initiate.save();
+
+  let metrics = Metric.load("0");
+  if (metrics) {
+    let newTotalMembers = metrics.totalMembers.plus(BigInt.fromI32(1));
+    metrics.totalMembers = newTotalMembers;
+
+    if (newTotalMembers.notEqual(BigInt.fromI32(0))) {
+      metrics.claimRate = BigDecimal.fromString(metrics.claimedMembers.toString()).div(BigDecimal.fromString(newTotalMembers.toString())).times(BigDecimal.fromString("100.0"));;
+      metrics.slashRate = BigDecimal.fromString(metrics.slashedMembers.toString()).div(BigDecimal.fromString(newTotalMembers.toString())).times(BigDecimal.fromString("100.0"));;
+    }
+
+    if (metrics.totalCohorts.notEqual(BigInt.fromI32(0))) {
+      metrics.averageCohortSize = BigDecimal.fromString(newTotalMembers.toString()).div(BigDecimal.fromString(metrics.totalCohorts.toString()));
+    }
+    
+    metrics.save();
+  }
 }
 
 export function handleSacrifice(event: SacrificeEvent): void {
@@ -123,7 +166,22 @@ export function handleSacrifice(event: SacrificeEvent): void {
   if (cohort) {
     sacrifice.initiate = event.params.sacrifice.toHex() + '-' + cohort.id;
     sacrifice.cohort = cohort.id;
+
+    let newSlashedMembers = cohort.slashedMembers.plus(BigInt.fromI32(1));
+    cohort.slashedMembers = newSlashedMembers;
+    cohort.save();
   }
 
   sacrifice.save();
+
+  let metrics = Metric.load("0");
+  if (metrics) {
+    let newSlashedMembers =  metrics.slashedMembers.plus(BigInt.fromI32(1));
+    metrics.slashedMembers = newSlashedMembers;
+    if (metrics.totalMembers.notEqual(BigInt.fromI32(0))) {
+      metrics.slashRate = BigDecimal.fromString(newSlashedMembers.toString()).div(BigDecimal.fromString(metrics.totalMembers.toString())).times(BigDecimal.fromString("100.0"));
+    }
+    
+    metrics.save();
+  }
 }
