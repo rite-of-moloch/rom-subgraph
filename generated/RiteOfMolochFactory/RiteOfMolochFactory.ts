@@ -84,14 +84,6 @@ export class NewRiteOfMoloch__Params {
   get sbtUrl(): string {
     return this._event.parameters[9].value.toString();
   }
-
-  get admin1(): Address {
-    return this._event.parameters[10].value.toAddress();
-  }
-
-  get admin2(): Address {
-    return this._event.parameters[11].value.toAddress();
-  }
 }
 
 export class RoleAdminChanged extends ethereum.Event {

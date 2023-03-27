@@ -32,17 +32,15 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   }
 
 
-  cohort.deployer = event.params.deployer
-  cohort.dao = event.params.membershipCriteria
-  cohort.token = event.params.stakingAsset
-  cohort.tokenAmount = event.params.assetAmount
-  cohort.sharesAmount = event.params.threshold
-  cohort.time = event.params.threshold
-  cohort.createdAt = event.block.timestamp
+  cohort.deployer = event.params.deployer;
+  cohort.dao = event.params.membershipCriteria;
+  cohort.token = event.params.stakingAsset;
+  cohort.tokenAmount = event.params.assetAmount;
+  cohort.sharesAmount = event.params.threshold;
+  cohort.time = event.params.threshold;
+  cohort.createdAt = event.block.timestamp;
   cohort.implementation = event.params.implementation;
   cohort.sbtUrl = event.params.sbtUrl;
-  cohort.admin1 = event.params.admin1;
-  cohort.admin2 = event.params.admin2;
 
   cohort.totalMembers = BigInt.fromI32(0);
   cohort.claimedMembers = BigInt.fromI32(0);

@@ -1,8 +1,6 @@
 type Cohort @entity {
   id: ID!
   deployer: Bytes! #address
-  admin1: Bytes! #address
-  admin2: Bytes! #address
   dao: Bytes! #address
   token: Bytes! #address
   sbtUrl: String! #string

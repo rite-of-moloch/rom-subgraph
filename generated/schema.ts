@@ -51,24 +51,6 @@ export class Cohort extends Entity {
     this.set("deployer", Value.fromBytes(value));
   }
 
-  get admin1(): Bytes {
-    let value = this.get("admin1");
-    return value!.toBytes();
-  }
-
-  set admin1(value: Bytes) {
-    this.set("admin1", Value.fromBytes(value));
-  }
-
-  get admin2(): Bytes {
-    let value = this.get("admin2");
-    return value!.toBytes();
-  }
-
-  set admin2(value: Bytes) {
-    this.set("admin2", Value.fromBytes(value));
-  }
-
   get dao(): Bytes {
     let value = this.get("dao");
     return value!.toBytes();
