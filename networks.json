@@ -8,25 +8,3 @@
     }
   }
 }
-
-// {
-//   "xdai": {
-//     "RiteOfMolochFactory": {
-//       "address": "0x67A9929392CfA00f8D15ee5c46ca662B174B8dd0"
-//     },
-//     "RiteOfMoloch": {
-//       "address": "0xAD4dc7E98615dEc11f1C49C9714FA8999c3f5d82"
-//     }
-//   }
-// }
-
-// {
-//   "xdai": {
-//     "RiteOfMolochFactory": {
-//       "address": "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003"
-//     },
-//     "RiteOfMoloch": {
-//       "address": "0x4589b0760baD5fAfBdAD8f3e8227991e8Ee99160"
-//     }
-//   }
-// }

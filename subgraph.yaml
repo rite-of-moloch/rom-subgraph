@@ -30,7 +30,7 @@ templates:
     network: gnosis
     source:
       # address: "0x4589b0760baD5fAfBdAD8f3e8227991e8Ee99160" #Address of the implementation
-      address: "0xAD4dc7E98615dEc11f1C49C9714FA8999c3f5d82"
+      # address: "0xAD4dc7E98615dEc11f1C49C9714FA8999c3f5d82"
       abi: RiteOfMoloch
     mapping:
       kind: ethereum/events
