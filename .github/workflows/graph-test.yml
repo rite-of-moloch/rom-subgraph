@@ -1,4 +1,4 @@
-name: deploy-graph
+name: test-graph
 
 # Trigger the workflow when:
 on:
@@ -14,8 +14,7 @@ on:
 
 jobs:
   graph-test:
-    name: deploy-graph
-    environment: deploy
+    name: test-graph
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
