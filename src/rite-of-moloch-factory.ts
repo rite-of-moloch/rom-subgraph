@@ -1,9 +1,7 @@
-import {
-  NewRiteOfMoloch,
-} from "../generated/RiteOfMolochFactory/RiteOfMolochFactory"
-import { Cohort, Metric } from "../generated/schema"
-import { RiteOfMoloch } from "../generated/templates"
-import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMoloch/RiteOfMoloch"
+import { NewRiteOfMoloch } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
+import { Cohort, Metric } from "../generated/schema";
+import { RiteOfMoloch } from "../generated/templates";
+import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMoloch/RiteOfMoloch";
 import { BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 
 export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
@@ -11,8 +9,8 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
 
   let metrics = Metric.load("0");
 
-  if(!metrics) {
-    // if metrics is not yet initialised... 
+  if (!metrics) {
+    // if metrics is not yet initialised...
     let bigZero = BigInt.fromI32(0);
     metrics = new Metric("0");
     metrics.totalCohorts = BigInt.fromI32(1);
@@ -22,15 +20,15 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
     metrics.slashRate = BigDecimal.fromString("0.0");
     metrics.claimRate = BigDecimal.fromString("0.0");
     metrics.averageCohortSize = BigDecimal.fromString("0.0");
-  }
-  else {
+  } else {
     let newCohorts = metrics.totalCohorts.plus(BigInt.fromI32(1));
-    metrics.totalCohorts = newCohorts; 
+    metrics.totalCohorts = newCohorts;
     if (newCohorts.notEqual(BigInt.fromI32(0))) {
-      metrics.averageCohortSize = BigDecimal.fromString(metrics.totalMembers.toString()).div(BigDecimal.fromString(newCohorts.toString()))
+      metrics.averageCohortSize = BigDecimal.fromString(
+        metrics.totalMembers.toString()
+      ).div(BigDecimal.fromString(newCohorts.toString()));
     }
   }
-
 
   cohort.deployer = event.params.deployer;
   cohort.dao = event.params.membershipCriteria;
