@@ -9,6 +9,7 @@ import {
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
 import {
+  DEFAULT_TREASURY_ADDRESS,
   createNewRiteOfMolochEvent,
   setUpMockTreasury,
 } from "./rite-of-moloch-factory-utils";
@@ -16,6 +17,8 @@ import {
   createChangedSharesEvent,
   createChangedStakeEvent,
   createChangedTimeEvent,
+  createClaimEvent,
+  createFeedbackEvent,
   createInitiationEvent,
   DEFAULT_COHORT_ADDRESS,
   DEFAULT_INITIATE_ADDRESS,
@@ -24,6 +27,8 @@ import {
   handleChangedShares,
   handleChangedStake,
   handleChangedTime,
+  handleClaim,
+  handleFeedback,
   handleInitiation,
 } from "../src/rite-of-moloch";
 import { getCohortId, getInitiateId } from "../src/utils";
@@ -142,5 +147,54 @@ describe("Cohort staking config and process", () => {
     // Return without processing on duplicate
     handleInitiation(event);
     assert.entityCount("Initiate", 1);
+  });
+
+  test("Handle claim", () => {
+    //TODO depends on previous test (hence 2)
+    let initiateAddress = Address.fromString(
+      "0x0000000000000000000000000000000000000002"
+    );
+    let initiateID = getInitiateId(DEFAULT_COHORT_ADDRESS, initiateAddress);
+    let cohortID = getCohortId(DEFAULT_COHORT_ADDRESS);
+    assert.entityCount("Claim", 0);
+
+    let initEvent = createInitiationEvent(
+      initiateAddress,
+      initiateAddress,
+      BigInt.fromI32(587),
+      BigInt.fromI32(456),
+      BigInt.fromI32(789)
+    );
+    initEvent.address = DEFAULT_COHORT_ADDRESS;
+    handleInitiation(initEvent);
+
+    let claimEvent = createClaimEvent(initiateAddress, BigInt.fromI32(456));
+    claimEvent.address = DEFAULT_COHORT_ADDRESS;
+    handleClaim(claimEvent);
+
+    assert.entityCount("Claim", 1);
+
+    assert.entityCount("Initiate", 2);
+    assert.fieldEquals("Initiate", initiateID, "id", initiateID);
+    assert.fieldEquals("Initiate", initiateID, "cohort", cohortID);
+    assert.fieldEquals("Initiate", initiateID, "stake", "0");
+    assert.fieldEquals("Initiate", initiateID, "deadline", "789");
+    assert.fieldEquals("Initiate", initiateID, "claimed", "true");
+    assert.fieldEquals("Initiate", initiateID, "sacrificed", "false");
+  });
+
+  test("Handle feedback", () => {
+    let feedbackEvent = createFeedbackEvent(
+      DEFAULT_INITIATE_ADDRESS,
+      DEFAULT_TREASURY_ADDRESS,
+      "MOLOCH"
+    );
+    feedbackEvent.address = DEFAULT_COHORT_ADDRESS;
+
+    assert.entityCount("CryForHelp", 0);
+
+    handleFeedback(feedbackEvent);
+
+    assert.entityCount("CryForHelp", 1);
   });
 });

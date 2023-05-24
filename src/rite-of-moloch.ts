@@ -56,17 +56,20 @@ export function handleChangedTime(event: ChangedTimeEvent): void {
 }
 
 export function handleClaim(event: ClaimEvent): void {
+  let cohortID = getCohortId(event.address);
+  let initiateID = getInitiateId(event.address, event.params.newMember);
   //Load cohort entity
-  let cohort = Cohort.load(event.address.toHex());
+  let cohort = Cohort.load(cohortID);
 
   let claim = new Claim(event.transaction.hash.toHex());
-  let initiate = Initiate.load(event.params.newMember.toHex());
+  let initiate = Initiate.load(initiateID);
 
   claim.amount = event.params.claimAmount;
 
   if (initiate) {
     initiate.claimed = true;
-    initiate.stake = new BigInt(0);
+    initiate.stake = BigInt.fromString("0");
+    initiate.save();
   }
 
   if (cohort) {
@@ -101,13 +104,16 @@ export function handleClaim(event: ClaimEvent): void {
 }
 
 export function handleFeedback(event: FeedbackEvent): void {
-  let cohort = Cohort.load(event.address.toHex());
+  let cohortID = getCohortId(event.address);
+  let initiateID = getInitiateId(event.address, event.params.user);
+
+  let cohort = Cohort.load(cohortID);
 
   let cryForHelp = new CryForHelp(event.transaction.hash.toHex());
 
   cryForHelp.message = event.params.feedback;
   if (cohort) {
-    cryForHelp.sender = event.params.user.toHex() + "-" + cohort.id; //Id of Initiate
+    cryForHelp.sender = initiateID; //Id of Initiate
     cryForHelp.cohort = cohort.id;
   }
 

@@ -6,6 +6,11 @@ import {
   RoleGranted,
   RoleRevoked,
 } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
+
+export const DEFAULT_TREASURY_ADDRESS = Address.fromString(
+  "0x0000000000000000000000000000000000000777"
+);
+
 export function createNewRiteOfMolochEvent(
   cohortAddress: Address,
   deployer: Address,
