@@ -2,13 +2,18 @@ import { NewRiteOfMoloch } from "../generated/RiteOfMolochFactory/RiteOfMolochFa
 import { Cohort, Metric } from "../generated/schema";
 import { RiteOfMoloch } from "../generated/templates";
 import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMoloch/RiteOfMoloch";
-import { BigInt, BigDecimal, log } from "@graphprotocol/graph-ts";
+import {
+  BigInt,
+  BigDecimal,
+  log,
+  dataSource,
+  Address,
+} from "@graphprotocol/graph-ts";
+import { ZERO_DECIMAL, ZERO_INT, getCohortId } from "./utils";
 
-const ZERO_INT = BigInt.fromI32(0);
-const ZERO_DECIMAL = BigDecimal.fromString("0.0");
 
 export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
-  let cohort = new Cohort(event.params.cohortContract.toHex());
+  let cohort = new Cohort(getCohortId(event.params.cohortContract));
 
   let metrics = Metric.load("0");
 
