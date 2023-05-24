@@ -8,7 +8,10 @@ import {
 } from "matchstick-as/assembly/index";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
-import { createNewRiteOfMolochEvent } from "./rite-of-moloch-factory-utils";
+import {
+  createNewRiteOfMolochEvent,
+  setUpMockTreasury,
+} from "./rite-of-moloch-factory-utils";
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
@@ -27,22 +30,32 @@ describe("Describe entity assertions", () => {
     let membershipCriteria = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     );
-    let stakeToken = Address.fromString(
+    let stakingAsset = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     );
-    let stakeAmount = BigInt.fromI32(234);
+    let treasury = Address.fromString(
+      "0x0000000000000000000000000000000000000001"
+    );
     let threshold = BigInt.fromI32(234);
-    let time = BigInt.fromI32(234);
+    let assetAmount = BigInt.fromI32(234);
+    let stakeDuration = BigInt.fromI32(234);
+    let sbtUrl = "https://example.com/";
+
     let newNewRiteOfMolochEvent = createNewRiteOfMolochEvent(
       cohortAddress,
       deployer,
       implementation,
       membershipCriteria,
-      stakeToken,
-      stakeAmount,
+      stakingAsset,
+      treasury,
       threshold,
-      time
+      assetAmount,
+      stakeDuration,
+      sbtUrl
     );
+
+    setUpMockTreasury(cohortAddress, treasury);
+
     handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
   });
 
@@ -53,7 +66,7 @@ describe("Describe entity assertions", () => {
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("ExampleEntity created and stored", () => {
-    assert.entityCount("Cohort", 0);
+  test("Cohort created and stored", () => {
+    assert.entityCount("Cohort", 1);
   });
 });
