@@ -8,10 +8,10 @@ import {
 } from "matchstick-as/assembly/index";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
-import { createNewRiteOfMolochEvent } from "./rite-of-moloch-factory-utils";
-
-// Tests structure (matchstick-as >=0.5.0)
-// https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
+import {
+  createNewRiteOfMolochEvent,
+  setUpMockTreasury,
+} from "./rite-of-moloch-factory-utils";
 
 describe("Describe entity assertions", () => {
   beforeAll(() => {
@@ -19,30 +19,39 @@ describe("Describe entity assertions", () => {
       "0x0000000000000000000000000000000000000001"
     );
     let deployer = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
+      "0x0000000000000000000000000000000000000002"
     );
     let implementation = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
+      "0x0000000000000000000000000000000000000003"
     );
     let membershipCriteria = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
+      "0x0000000000000000000000000000000000000004"
     );
-    let stakeToken = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
+    let stakingAsset = Address.fromString(
+      "0x0000000000000000000000000000000000000005"
     );
-    let stakeAmount = BigInt.fromI32(234);
-    let threshold = BigInt.fromI32(234);
-    let time = BigInt.fromI32(234);
+    let treasury = Address.fromString(
+      "0x0000000000000000000000000000000000000006"
+    );
+    let threshold = BigInt.fromI32(123);
+    let assetAmount = BigInt.fromI32(456);
+    let stakeDuration = BigInt.fromI32(789);
+    let sbtUrl = "https://example.com/";
     let newNewRiteOfMolochEvent = createNewRiteOfMolochEvent(
       cohortAddress,
       deployer,
       implementation,
       membershipCriteria,
-      stakeToken,
-      stakeAmount,
+      stakingAsset,
+      treasury,
       threshold,
-      time
+      assetAmount,
+      stakeDuration,
+      sbtUrl
     );
+
+    setUpMockTreasury(cohortAddress, treasury);
+
     handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
   });
 
@@ -53,7 +62,43 @@ describe("Describe entity assertions", () => {
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("ExampleEntity created and stored", () => {
-    assert.entityCount("Cohort", 0);
+  test("Cohort created and stored", () => {
+    assert.entityCount("Cohort", 1);
+    let cohortID = "0x0000000000000000000000000000000000000001";
+    assert.fieldEquals("Cohort", cohortID, "id", cohortID);
+    assert.fieldEquals(
+      "Cohort",
+      cohortID,
+      "deployer",
+      "0x0000000000000000000000000000000000000002"
+    );
+    assert.fieldEquals(
+      "Cohort",
+      cohortID,
+      "implementation",
+      "0x0000000000000000000000000000000000000003"
+    );
+    assert.fieldEquals(
+      "Cohort",
+      cohortID,
+      "dao",
+      "0x0000000000000000000000000000000000000004"
+    );
+    assert.fieldEquals(
+      "Cohort",
+      cohortID,
+      "token",
+      "0x0000000000000000000000000000000000000005"
+    );
+    assert.fieldEquals(
+      "Cohort",
+      cohortID,
+      "treasury",
+      "0x0000000000000000000000000000000000000006"
+    );
+    assert.fieldEquals("Cohort", cohortID, "sharesAmount", "123");
+    assert.fieldEquals("Cohort", cohortID, "tokenAmount", "456");
+    assert.fieldEquals("Cohort", cohortID, "time", "789");
+    assert.fieldEquals("Cohort", cohortID, "sbtUrl", "https://example.com/");
   });
 });
