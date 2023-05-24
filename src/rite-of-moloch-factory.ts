@@ -14,7 +14,6 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
 
   if (!metrics) {
     // if metrics is not yet initialised...
-
     metrics = new Metric("0");
     metrics.totalCohorts = ZERO_INT;
     metrics.totalMembers = ZERO_INT;
@@ -24,8 +23,6 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
     metrics.claimRate = ZERO_DECIMAL;
     metrics.averageCohortSize = ZERO_DECIMAL;
   } else {
-    log.debug("found metrics.", []);
-
     let newCohorts = metrics.totalCohorts.plus(BigInt.fromI32(1));
     metrics.totalCohorts = newCohorts;
     if (newCohorts.notEqual(ZERO_INT)) {
@@ -41,7 +38,7 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   cohort.token = event.params.stakingAsset;
   cohort.tokenAmount = event.params.assetAmount;
   cohort.sharesAmount = event.params.threshold;
-  cohort.time = event.params.threshold;
+  cohort.time = event.params.stakeDuration;
   cohort.createdAt = event.block.timestamp;
 
   cohort.implementation = event.params.implementation;
