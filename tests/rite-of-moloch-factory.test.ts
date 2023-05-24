@@ -7,13 +7,16 @@ import {
   afterAll,
 } from "matchstick-as/assembly/index";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
+import {
+  handleNewRiteOfMoloch,
+} from "../src/rite-of-moloch-factory";
 import {
   createNewRiteOfMolochEvent,
   setUpMockTreasury,
 } from "./rite-of-moloch-factory-utils";
+import { getCohortId } from "../src/utils";
 
-describe("Describe entity assertions", () => {
+describe("Index cohorts from factory", () => {
   beforeAll(() => {
     let cohortAddress = Address.fromString(
       "0x0000000000000000000000000000000000000001"
@@ -64,7 +67,9 @@ describe("Describe entity assertions", () => {
 
   test("Cohort created and stored", () => {
     assert.entityCount("Cohort", 1);
-    let cohortID = "0x0000000000000000000000000000000000000001";
+    let cohortID = getCohortId(
+      Address.fromString("0x0000000000000000000000000000000000000001")
+    );
     assert.fieldEquals("Cohort", cohortID, "id", cohortID);
     assert.fieldEquals(
       "Cohort",

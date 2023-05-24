@@ -6,8 +6,6 @@ import {
   RoleGranted,
   RoleRevoked,
 } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
-import { log } from "matchstick-as/assembly/log";
-
 export function createNewRiteOfMolochEvent(
   cohortAddress: Address,
   deployer: Address,
