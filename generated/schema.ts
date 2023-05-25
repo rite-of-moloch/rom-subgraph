@@ -50,6 +50,32 @@ export class Cohort extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get address(): Bytes {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get chain(): string {
+    let value = this.get("chain");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set chain(value: string) {
+    this.set("chain", Value.fromString(value));
+  }
+
   get deployer(): Bytes {
     let value = this.get("deployer");
     if (!value || value.kind == ValueKind.NULL) {
