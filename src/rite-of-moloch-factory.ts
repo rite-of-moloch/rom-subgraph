@@ -11,7 +11,6 @@ import {
 } from "@graphprotocol/graph-ts";
 import { ZERO_DECIMAL, ZERO_INT, getCohortId } from "./utils";
 
-
 export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   let cohort = new Cohort(getCohortId(event.params.cohortContract));
 
@@ -38,6 +37,8 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   }
 
   log.debug("Setting up cohort.", []);
+  cohort.address = event.params.cohortContract;
+  cohort.chain = dataSource.network();
   cohort.deployer = event.params.deployer;
   cohort.dao = event.params.membershipCriteria;
   cohort.token = event.params.stakingAsset;
