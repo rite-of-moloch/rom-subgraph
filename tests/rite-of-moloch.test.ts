@@ -20,6 +20,7 @@ import {
   createClaimEvent,
   createFeedbackEvent,
   createInitiationEvent,
+  createSacrificeEvent,
   DEFAULT_COHORT_ADDRESS,
   DEFAULT_INITIATE_ADDRESS,
 } from "./rite-of-moloch-utils";
@@ -30,6 +31,7 @@ import {
   handleClaim,
   handleFeedback,
   handleInitiation,
+  handleSacrifice,
 } from "../src/rite-of-moloch";
 import { getCohortId, getInitiateId } from "../src/utils";
 
@@ -196,5 +198,29 @@ describe("Cohort staking config and process", () => {
     handleFeedback(feedbackEvent);
 
     assert.entityCount("CryForHelp", 1);
+  });
+
+  test("Handle sacrifice", () => {
+    let sacrificeEvent = createSacrificeEvent(
+      DEFAULT_INITIATE_ADDRESS,
+      BigInt.fromString("456"),
+      Address.fromString("0x000000000000000000000000000000000000dead")
+    );
+    sacrificeEvent.address = DEFAULT_COHORT_ADDRESS;
+    let initiateID = getInitiateId(
+      DEFAULT_COHORT_ADDRESS,
+      DEFAULT_INITIATE_ADDRESS
+    );
+
+    assert.entityCount("Sacrifice", 0);
+
+    handleSacrifice(sacrificeEvent);
+
+    assert.entityCount("Sacrifice", 1);
+
+    assert.fieldEquals("Initiate", initiateID, "id", initiateID);
+    assert.fieldEquals("Initiate", initiateID, "stake", "0");
+    assert.fieldEquals("Initiate", initiateID, "claimed", "false");
+    assert.fieldEquals("Initiate", initiateID, "sacrificed", "true");
   });
 });
