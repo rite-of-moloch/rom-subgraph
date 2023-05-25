@@ -194,21 +194,24 @@ export function handleInitiation(event: InitiationEvent): void {
 }
 
 export function handleSacrifice(event: SacrificeEvent): void {
-  let cohort = Cohort.load(event.address.toHex());
+  let cohortID = getCohortId(event.address);
+  let initiateID = getInitiateId(event.address, event.params.sacrifice);
+  let cohort = Cohort.load(cohortID);
 
   let sacrifice = new Sacrifice(event.transaction.hash.toHex());
-  let initiate = Initiate.load(event.params.sacrifice.toHex());
+  let initiate = Initiate.load(initiateID);
 
   sacrifice.amount = event.params.slashedAmount;
   sacrifice.slasher = event.params.slasher;
 
   if (initiate) {
     initiate.sacrificed = true;
-    initiate.stake = new BigInt(0);
+    initiate.stake = BigInt.fromI32(0);
+    initiate.save();
   }
 
   if (cohort) {
-    sacrifice.initiate = event.params.sacrifice.toHex() + "-" + cohort.id;
+    sacrifice.initiate = initiateID;
     sacrifice.cohort = cohort.id;
 
     let newSlashedMembers = cohort.slashedMembers.plus(BigInt.fromI32(1));
