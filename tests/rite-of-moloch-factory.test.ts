@@ -4,111 +4,106 @@ import {
   test,
   clearStore,
   beforeAll,
-  afterAll
-} from "matchstick-as/assembly/index"
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
-import { ExampleEntity } from "../generated/schema"
-import { NewRiteOfMoloch } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory"
-import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory"
-import { createNewRiteOfMolochEvent } from "./rite-of-moloch-factory-utils"
+  afterAll,
+} from "matchstick-as/assembly/index";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import {
+  handleNewRiteOfMoloch,
+} from "../src/rite-of-moloch-factory";
+import {
+  createNewRiteOfMolochEvent,
+  setUpMockTreasury,
+} from "./rite-of-moloch-factory-utils";
+import { getCohortId } from "../src/utils";
 
-// Tests structure (matchstick-as >=0.5.0)
-// https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
-
-describe("Describe entity assertions", () => {
+describe("Index cohorts from factory", () => {
   beforeAll(() => {
     let cohortAddress = Address.fromString(
       "0x0000000000000000000000000000000000000001"
-    )
+    );
     let deployer = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
+      "0x0000000000000000000000000000000000000002"
+    );
     let implementation = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
+      "0x0000000000000000000000000000000000000003"
+    );
     let membershipCriteria = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let stakeToken = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let stakeAmount = BigInt.fromI32(234)
-    let threshold = BigInt.fromI32(234)
-    let time = BigInt.fromI32(234)
+      "0x0000000000000000000000000000000000000004"
+    );
+    let stakingAsset = Address.fromString(
+      "0x0000000000000000000000000000000000000005"
+    );
+    let treasury = Address.fromString(
+      "0x0000000000000000000000000000000000000006"
+    );
+    let threshold = BigInt.fromI32(123);
+    let assetAmount = BigInt.fromI32(456);
+    let stakeDuration = BigInt.fromI32(789);
+    let sbtUrl = "https://example.com/";
     let newNewRiteOfMolochEvent = createNewRiteOfMolochEvent(
       cohortAddress,
       deployer,
       implementation,
       membershipCriteria,
-      stakeToken,
-      stakeAmount,
+      stakingAsset,
+      treasury,
       threshold,
-      time
-    )
-    handleNewRiteOfMoloch(newNewRiteOfMolochEvent)
-  })
+      assetAmount,
+      stakeDuration,
+      sbtUrl
+    );
+
+    setUpMockTreasury(cohortAddress, treasury);
+
+    handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
+  });
 
   afterAll(() => {
-    clearStore()
-  })
+    clearStore();
+  });
 
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("ExampleEntity created and stored", () => {
-    assert.entityCount("ExampleEntity", 1)
-
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
+  test("Cohort created and stored", () => {
+    assert.entityCount("Cohort", 1);
+    let cohortID = getCohortId(
+      Address.fromString("0x0000000000000000000000000000000000000001")
+    );
+    assert.fieldEquals("Cohort", cohortID, "id", cohortID);
     assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "cohortAddress",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
+      "Cohort",
+      cohortID,
       "deployer",
-      "0x0000000000000000000000000000000000000001"
-    )
+      "0x0000000000000000000000000000000000000002"
+    );
     assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
+      "Cohort",
+      cohortID,
       "implementation",
-      "0x0000000000000000000000000000000000000001"
-    )
+      "0x0000000000000000000000000000000000000003"
+    );
     assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "membershipCriteria",
-      "0x0000000000000000000000000000000000000001"
-    )
+      "Cohort",
+      cohortID,
+      "dao",
+      "0x0000000000000000000000000000000000000004"
+    );
     assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "stakeToken",
-      "0x0000000000000000000000000000000000000001"
-    )
+      "Cohort",
+      cohortID,
+      "token",
+      "0x0000000000000000000000000000000000000005"
+    );
     assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "stakeAmount",
-      "234"
-    )
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "threshold",
-      "234"
-    )
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "time",
-      "234"
-    )
-
-    // More assert options:
-    // https://thegraph.com/docs/en/developer/matchstick/#asserts
-  })
-})
+      "Cohort",
+      cohortID,
+      "treasury",
+      "0x0000000000000000000000000000000000000006"
+    );
+    assert.fieldEquals("Cohort", cohortID, "sharesAmount", "123");
+    assert.fieldEquals("Cohort", cohortID, "tokenAmount", "456");
+    assert.fieldEquals("Cohort", cohortID, "time", "789");
+    assert.fieldEquals("Cohort", cohortID, "sbtUrl", "https://example.com/");
+  });
+});
