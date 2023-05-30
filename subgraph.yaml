@@ -6,9 +6,9 @@ dataSources:
     name: RiteOfMolochFactory
     network: gnosis
     source:
-      address: "0x67A9929392CfA00f8D15ee5c46ca662B174B8dd0" #"0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1"
+      address: "0xc7e0366AC68B0e17c51fA551aC338FB19641f7DF" #"0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1"
       abi: RiteOfMolochFactory
-      startBlock: 8659711 #8659712 #(Block-1) the factory was created
+      startBlock: 28161552 #8659712 #(Block-1) the factory was created
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
