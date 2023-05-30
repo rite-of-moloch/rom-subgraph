@@ -95,7 +95,7 @@ export function createNewRiteOfMolochEvent(
 }
 
 export function setUpMockTreasury(cohort: Address, treasury: Address): void {
-  createMockedFunction(cohort, "treasury", "treasury():(address)").returns([
+  createMockedFunction(cohort, "adminTreasury", "adminTreasury():(address)").returns([
     ethereum.Value.fromAddress(treasury),
   ]);
 }

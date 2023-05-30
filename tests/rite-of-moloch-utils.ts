@@ -10,12 +10,9 @@ import {
   Feedback,
   Initialized,
   Initiation,
-  RiteOfMolochRoleAdminChanged,
-  RiteOfMolochRoleGranted,
-  RiteOfMolochRoleRevoked,
   Sacrifice,
   Transfer,
-} from "../generated/RiteOfMoloch/RiteOfMoloch";
+} from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 
 export const DEFAULT_COHORT_ADDRESS = Address.fromString(
   "0x0000000000000000000000000000000000000001"

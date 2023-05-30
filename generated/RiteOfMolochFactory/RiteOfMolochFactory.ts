@@ -191,67 +191,67 @@ export class RoleRevoked__Params {
 }
 
 export class RiteOfMolochFactory__createCohortInputInitDataStruct extends ethereum.Tuple {
-  get membershipCriteria(): Address {
+  get value0(): Address {
     return this[0].toAddress();
   }
 
-  get stakingAsset(): Address {
+  get value1(): Address {
     return this[1].toAddress();
   }
 
-  get treasury(): Address {
+  get value2(): Address {
     return this[2].toAddress();
   }
 
-  get admin1(): Address {
+  get value3(): Address {
     return this[3].toAddress();
   }
 
-  get admin2(): Address {
+  get value4(): Address {
     return this[4].toAddress();
   }
 
-  get cohortSize(): BigInt {
+  get value5(): BigInt {
     return this[5].toBigInt();
   }
 
-  get joinDuration(): BigInt {
+  get value6(): BigInt {
     return this[6].toBigInt();
   }
 
-  get threshold(): BigInt {
+  get value7(): BigInt {
     return this[7].toBigInt();
   }
 
-  get assetAmount(): BigInt {
+  get value8(): BigInt {
     return this[8].toBigInt();
   }
 
-  get stakeDuration(): BigInt {
+  get value9(): BigInt {
     return this[9].toBigInt();
   }
 
-  get topHatId(): BigInt {
+  get value10(): BigInt {
     return this[10].toBigInt();
   }
 
-  get cohortName(): string {
+  get value11(): string {
     return this[11].toString();
   }
 
-  get sbtName(): string {
+  get value12(): string {
     return this[12].toString();
   }
 
-  get sbtSymbol(): string {
+  get value13(): string {
     return this[13].toString();
   }
 
-  get baseUri(): string {
+  get value14(): string {
     return this[14].toString();
   }
 
-  get shamanOn(): boolean {
+  get value15(): boolean {
     return this[15].toBoolean();
   }
 }
@@ -474,39 +474,51 @@ export class RiteOfMolochFactory extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
-}
 
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
+  sustainabilityFee(): BigInt {
+    let result = super.call(
+      "sustainabilityFee",
+      "sustainabilityFee():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
   }
 
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
-  }
-}
-
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-
-  get _hatsProtocol(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  try_sustainabilityFee(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "sustainabilityFee",
+      "sustainabilityFee():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  get _factoryOperatorHat(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  sustainabilityTreasury(): Address {
+    let result = super.call(
+      "sustainabilityTreasury",
+      "sustainabilityTreasury():(address)",
+      []
+    );
+
+    return result[0].toAddress();
   }
-}
 
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
+  try_sustainabilityTreasury(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "sustainabilityTreasury",
+      "sustainabilityTreasury():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 }
 
@@ -675,67 +687,67 @@ export class CreateCohortCall__Outputs {
 }
 
 export class CreateCohortCallInitDataStruct extends ethereum.Tuple {
-  get membershipCriteria(): Address {
+  get value0(): Address {
     return this[0].toAddress();
   }
 
-  get stakingAsset(): Address {
+  get value1(): Address {
     return this[1].toAddress();
   }
 
-  get treasury(): Address {
+  get value2(): Address {
     return this[2].toAddress();
   }
 
-  get admin1(): Address {
+  get value3(): Address {
     return this[3].toAddress();
   }
 
-  get admin2(): Address {
+  get value4(): Address {
     return this[4].toAddress();
   }
 
-  get cohortSize(): BigInt {
+  get value5(): BigInt {
     return this[5].toBigInt();
   }
 
-  get joinDuration(): BigInt {
+  get value6(): BigInt {
     return this[6].toBigInt();
   }
 
-  get threshold(): BigInt {
+  get value7(): BigInt {
     return this[7].toBigInt();
   }
 
-  get assetAmount(): BigInt {
+  get value8(): BigInt {
     return this[8].toBigInt();
   }
 
-  get stakeDuration(): BigInt {
+  get value9(): BigInt {
     return this[9].toBigInt();
   }
 
-  get topHatId(): BigInt {
+  get value10(): BigInt {
     return this[10].toBigInt();
   }
 
-  get cohortName(): string {
+  get value11(): string {
     return this[11].toString();
   }
 
-  get sbtName(): string {
+  get value12(): string {
     return this[12].toString();
   }
 
-  get sbtSymbol(): string {
+  get value13(): string {
     return this[13].toString();
   }
 
-  get baseUri(): string {
+  get value14(): string {
     return this[14].toString();
   }
 
-  get shamanOn(): boolean {
+  get value15(): boolean {
     return this[15].toBoolean();
   }
 }
@@ -804,6 +816,66 @@ export class RevokeRoleCall__Outputs {
   _call: RevokeRoleCall;
 
   constructor(call: RevokeRoleCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateSustainabilityFeeCall extends ethereum.Call {
+  get inputs(): UpdateSustainabilityFeeCall__Inputs {
+    return new UpdateSustainabilityFeeCall__Inputs(this);
+  }
+
+  get outputs(): UpdateSustainabilityFeeCall__Outputs {
+    return new UpdateSustainabilityFeeCall__Outputs(this);
+  }
+}
+
+export class UpdateSustainabilityFeeCall__Inputs {
+  _call: UpdateSustainabilityFeeCall;
+
+  constructor(call: UpdateSustainabilityFeeCall) {
+    this._call = call;
+  }
+
+  get fee(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class UpdateSustainabilityFeeCall__Outputs {
+  _call: UpdateSustainabilityFeeCall;
+
+  constructor(call: UpdateSustainabilityFeeCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateSustainabilityTreasuryCall extends ethereum.Call {
+  get inputs(): UpdateSustainabilityTreasuryCall__Inputs {
+    return new UpdateSustainabilityTreasuryCall__Inputs(this);
+  }
+
+  get outputs(): UpdateSustainabilityTreasuryCall__Outputs {
+    return new UpdateSustainabilityTreasuryCall__Outputs(this);
+  }
+}
+
+export class UpdateSustainabilityTreasuryCall__Inputs {
+  _call: UpdateSustainabilityTreasuryCall;
+
+  constructor(call: UpdateSustainabilityTreasuryCall) {
+    this._call = call;
+  }
+
+  get treasury(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpdateSustainabilityTreasuryCall__Outputs {
+  _call: UpdateSustainabilityTreasuryCall;
+
+  constructor(call: UpdateSustainabilityTreasuryCall) {
     this._call = call;
   }
 }

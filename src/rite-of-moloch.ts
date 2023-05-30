@@ -7,7 +7,7 @@ import {
   Feedback as FeedbackEvent,
   Initiation as InitiationEvent,
   Sacrifice as SacrificeEvent,
-} from "../generated/RiteOfMoloch/RiteOfMoloch";
+} from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 import {
   Initiate,
   Sacrifice,

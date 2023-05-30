@@ -1,7 +1,7 @@
 import { NewRiteOfMoloch } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
 import { Cohort, Metric } from "../generated/schema";
 import { RiteOfMoloch } from "../generated/templates";
-import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMoloch/RiteOfMoloch";
+import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 import {
   BigInt,
   BigDecimal,
@@ -59,7 +59,7 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   log.debug("Getting treasury.", []);
 
   let contract = RiteOfMolochContract.bind(event.params.cohortContract);
-  cohort.treasury = contract.treasury();
+  cohort.treasury = contract.adminTreasury();
 
   log.info("New cohort created: {}", [cohort.id]);
 
