@@ -19,6 +19,7 @@ import {
   createUpdatedShareThresholdEvent,
   createUpdatedMinimumStakeEvent,
   createUpdatedStakeDurationEvent,
+  createUpdatedJoinTimeLimitEvent,
   createClaimEvent,
   createFeedbackEvent,
   createInitiationEvent,
@@ -34,6 +35,7 @@ import {
   handleFeedback,
   handleInitiation,
   handleSacrifice,
+  handleUpdatedJoinTimeLimit,
 } from "../src/rite-of-moloch";
 import { getCohortId, getInitiateId } from "../src/utils";
 
@@ -128,6 +130,20 @@ describe("Cohort staking config and process", () => {
     handleUpdatedStakeDuration(event);
 
     assert.fieldEquals("Cohort", cohortID, "stakeDuration", "1337");
+  });
+
+  test("Handle changed join limit", () => {
+    let cohortID = getCohortId(DEFAULT_COHORT_ADDRESS);
+    assert.fieldEquals("Cohort", cohortID, "joinEndTime", "123456789");
+
+    let event = createUpdatedJoinTimeLimitEvent(
+      BigInt.fromString("123456789"),
+      BigInt.fromString("987654321")
+    );
+    event.address = DEFAULT_COHORT_ADDRESS;
+    handleUpdatedJoinTimeLimit(event);
+
+    assert.fieldEquals("Cohort", cohortID, "joinEndTime", "987654321");
   });
 
   test("Handle initiation", () => {

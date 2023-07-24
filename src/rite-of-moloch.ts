@@ -7,6 +7,7 @@ import {
   Feedback,
   Initiation,
   Sacrifice as SacrificeEvent,
+  UpdatedJoinTimeLimit,
 } from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 import {
   Initiate,
@@ -53,6 +54,19 @@ export function handleUpdatedStakeDuration(event: UpdatedStakeDuration): void {
   if (cohort) {
     //Update data
     cohort.stakeDuration = event.params.newStakeDuration;
+    cohort.save();
+  }
+}
+
+export function handleUpdatedJoinTimeLimit(event: UpdatedJoinTimeLimit): void {
+  let cohortID = getCohortId(event.address);
+
+  //Load cohort entity
+  let cohort = Cohort.load(cohortID);
+
+  if (cohort) {
+    //Update data
+    cohort.joinEndTime = event.params.newJoinTimeLimit;
     cohort.save();
   }
 }

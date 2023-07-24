@@ -49,6 +49,8 @@ templates:
           handler: handleUpdatedMinimumStake
         - event: UpdatedStakeDuration(uint256,uint256)
           handler: handleUpdatedStakeDuration
+        - event: UpdatedJoinTimeLimit(uint256,uint256)
+          handler: handleUpdatedJoinTimeLimit
         - event: Claim(address,uint256)
           handler: handleClaim
         - event: Feedback(address,address,string)

@@ -12,6 +12,7 @@ import {
   UpdatedShareThreshold,
   UpdatedMinimumStake,
   UpdatedStakeDuration,
+  UpdatedJoinTimeLimit,
 } from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 
 export const DEFAULT_COHORT_ADDRESS = Address.fromString(
@@ -146,6 +147,33 @@ export function createUpdatedStakeDurationEvent(
   );
 
   return updatedStakeDurationEvent;
+}
+
+export function createUpdatedJoinTimeLimitEvent(
+  oldJoinTimeLimit: BigInt,
+  newJoinTimeLimit: BigInt
+): UpdatedJoinTimeLimit {
+  let updatedJoinTimeLimitEvent = changetype<UpdatedJoinTimeLimit>(
+    newMockEvent()
+  );
+
+  updatedJoinTimeLimitEvent.parameters = new Array();
+
+  updatedJoinTimeLimitEvent.parameters.push(
+    new ethereum.EventParam(
+      "oldJoinTimeLimit",
+      ethereum.Value.fromUnsignedBigInt(oldJoinTimeLimit)
+    )
+  );
+
+  updatedJoinTimeLimitEvent.parameters.push(
+    new ethereum.EventParam(
+      "newJoinTimeLimit",
+      ethereum.Value.fromUnsignedBigInt(newJoinTimeLimit)
+    )
+  );
+
+  return updatedJoinTimeLimitEvent;
 }
 
 export function createClaimEvent(
