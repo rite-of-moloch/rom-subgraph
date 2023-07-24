@@ -12,6 +12,7 @@ import {
   createNewRiteOfMolochEvent,
   setUpMockTreasury,
   setUpMockName,
+  setUpMockEndTime,
 } from "./rite-of-moloch-factory-utils";
 import { getCohortId } from "../src/utils";
 
@@ -54,6 +55,7 @@ describe("Index cohorts from factory", () => {
 
     setUpMockTreasury(cohortAddress, treasury);
     setUpMockName(cohortAddress);
+    setUpMockEndTime(cohortAddress, BigInt.fromI32(123456789));
 
     handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
   });

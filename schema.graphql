@@ -9,6 +9,7 @@ type Cohort @entity {
   daoTreasury: Bytes! #address
   shareThreshold: BigInt! #uint256
   stakeDuration: BigInt! #uint256 seconds for slash
+  joinEndTime: BigInt!
   stakingToken: Bytes! #address
   minimumStake: BigInt! #uint256
   sbtUrl: String! #string
@@ -61,7 +62,6 @@ type Sacrifice @entity {
   cohort: Cohort!
 }
 
-
 type Metric @entity {
   id: ID!
   totalCohorts: BigInt! # uint256
@@ -69,7 +69,7 @@ type Metric @entity {
   claimedMembers: BigInt!
   slashedMembers: BigInt!
 
-  slashRate: BigDecimal! #should be a float? 
+  slashRate: BigDecimal! #should be a float?
   claimRate: BigDecimal!
   averageCohortSize: BigDecimal!
 }

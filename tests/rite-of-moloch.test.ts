@@ -11,6 +11,7 @@ import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
 import {
   DEFAULT_TREASURY_ADDRESS,
   createNewRiteOfMolochEvent,
+  setUpMockEndTime,
   setUpMockName,
   setUpMockTreasury,
 } from "./rite-of-moloch-factory-utils";
@@ -75,6 +76,7 @@ describe("Cohort staking config and process", () => {
 
     setUpMockTreasury(cohortAddress, daoTreasury);
     setUpMockName(cohortAddress);
+    setUpMockEndTime(cohortAddress, BigInt.fromI32(123456789));
 
     handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
   });

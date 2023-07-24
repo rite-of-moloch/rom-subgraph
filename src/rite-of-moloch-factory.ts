@@ -61,6 +61,7 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   let contract = RiteOfMolochContract.bind(event.params.cohortContract);
   cohort.daoTreasury = contract.daoTreasury();
   cohort.name = contract.cohortName();
+  cohort.joinEndTime = contract.joinEndTime();
 
   log.info("New cohort created: {}", [cohort.id]);
 

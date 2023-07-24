@@ -167,6 +167,19 @@ export class Cohort extends Entity {
     this.set("stakeDuration", Value.fromBigInt(value));
   }
 
+  get joinEndTime(): BigInt {
+    let value = this.get("joinEndTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set joinEndTime(value: BigInt) {
+    this.set("joinEndTime", Value.fromBigInt(value));
+  }
+
   get stakingToken(): Bytes {
     let value = this.get("stakingToken");
     if (!value || value.kind == ValueKind.NULL) {

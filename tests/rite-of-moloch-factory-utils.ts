@@ -99,3 +99,11 @@ export function setUpMockName(cohort: Address): void {
     ethereum.Value.fromString("Mock cohort"),
   ]);
 }
+
+export function setUpMockEndTime(cohort: Address, endTime: BigInt): void {
+  createMockedFunction(
+    cohort,
+    "joinEndTime",
+    "joinEndTime():(uint256)"
+  ).returns([ethereum.Value.fromUnsignedBigInt(endTime)]);
+}
