@@ -1,7 +1,7 @@
 import { NewRiteOfMoloch } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
 import { Cohort, Metric } from "../generated/schema";
 import { RiteOfMoloch } from "../generated/templates";
-import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMoloch/RiteOfMoloch";
+import { RiteOfMoloch as RiteOfMolochContract } from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 import {
   BigInt,
   BigDecimal,
@@ -41,10 +41,10 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   cohort.chain = dataSource.network();
   cohort.deployer = event.params.deployer;
   cohort.dao = event.params.membershipCriteria;
-  cohort.token = event.params.stakingAsset;
-  cohort.tokenAmount = event.params.assetAmount;
-  cohort.sharesAmount = event.params.threshold;
-  cohort.time = event.params.stakeDuration;
+  cohort.stakingToken = event.params.stakingAsset;
+  cohort.minimumStake = event.params.assetAmount;
+  cohort.shareThreshold = event.params.threshold;
+  cohort.stakeDuration = event.params.stakeDuration;
   cohort.createdAt = event.block.timestamp;
 
   cohort.implementation = event.params.implementation;
@@ -59,7 +59,8 @@ export function handleNewRiteOfMoloch(event: NewRiteOfMoloch): void {
   log.debug("Getting treasury.", []);
 
   let contract = RiteOfMolochContract.bind(event.params.cohortContract);
-  cohort.treasury = contract.treasury();
+  cohort.daoTreasury = contract.daoTreasury();
+  cohort.name = contract.cohortName();
 
   log.info("New cohort created: {}", [cohort.id]);
 

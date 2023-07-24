@@ -1,11 +1,6 @@
 import { createMockedFunction, newMockEvent } from "matchstick-as";
 import { ethereum, Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
-import {
-  NewRiteOfMoloch,
-  RoleAdminChanged,
-  RoleGranted,
-  RoleRevoked,
-} from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
+import { NewRiteOfMoloch } from "../generated/RiteOfMolochFactory/RiteOfMolochFactory";
 
 export const DEFAULT_TREASURY_ADDRESS = Address.fromString(
   "0x0000000000000000000000000000000000000777"
@@ -15,11 +10,11 @@ export function createNewRiteOfMolochEvent(
   cohortAddress: Address,
   deployer: Address,
   implementation: Address,
-  membershipCriteria: Address,
+  dao: Address,
   stakingAsset: Address,
-  treasury: Address,
-  threshold: BigInt,
-  assetAmount: BigInt,
+  daoTreasury: Address,
+  shareThreshold: BigInt,
+  minimumStake: BigInt,
   stakeDuration: BigInt,
   sbtUrl: string
 ): NewRiteOfMoloch {
@@ -51,25 +46,22 @@ export function createNewRiteOfMolochEvent(
     "implementation",
     ethereum.Value.fromAddress(implementation)
   );
-  const _membershipCriteria = new ethereum.EventParam(
-    "membershipCriteria",
-    ethereum.Value.fromAddress(membershipCriteria)
-  );
+  const _dao = new ethereum.EventParam("dao", ethereum.Value.fromAddress(dao));
   const _stakingAsset = new ethereum.EventParam(
     "stakingAsset",
     ethereum.Value.fromAddress(stakingAsset)
   );
-  const _treasury = new ethereum.EventParam(
-    "treasury",
-    ethereum.Value.fromAddress(treasury)
+  const _daoTreasury = new ethereum.EventParam(
+    "daoTreasury",
+    ethereum.Value.fromAddress(daoTreasury)
   );
-  const _threshold = new ethereum.EventParam(
-    "threshold",
-    ethereum.Value.fromUnsignedBigInt(threshold)
+  const _shareThreshold = new ethereum.EventParam(
+    "shareThreshold",
+    ethereum.Value.fromUnsignedBigInt(shareThreshold)
   );
-  const _assetAmount = new ethereum.EventParam(
-    "assetAmount",
-    ethereum.Value.fromUnsignedBigInt(assetAmount)
+  const _minimumStake = new ethereum.EventParam(
+    "minimumStake",
+    ethereum.Value.fromUnsignedBigInt(minimumStake)
   );
   const _stakeDuration = new ethereum.EventParam(
     "stakeDuration",
@@ -83,11 +75,11 @@ export function createNewRiteOfMolochEvent(
   newRiteOfMolochEvent.parameters.push(_cohortAddress);
   newRiteOfMolochEvent.parameters.push(_deployer);
   newRiteOfMolochEvent.parameters.push(_implementation);
-  newRiteOfMolochEvent.parameters.push(_membershipCriteria);
+  newRiteOfMolochEvent.parameters.push(_dao);
   newRiteOfMolochEvent.parameters.push(_stakingAsset);
-  newRiteOfMolochEvent.parameters.push(_treasury);
-  newRiteOfMolochEvent.parameters.push(_threshold);
-  newRiteOfMolochEvent.parameters.push(_assetAmount);
+  newRiteOfMolochEvent.parameters.push(_daoTreasury);
+  newRiteOfMolochEvent.parameters.push(_shareThreshold);
+  newRiteOfMolochEvent.parameters.push(_minimumStake);
   newRiteOfMolochEvent.parameters.push(_stakeDuration);
   newRiteOfMolochEvent.parameters.push(_sbtUrl);
 
@@ -95,79 +87,15 @@ export function createNewRiteOfMolochEvent(
 }
 
 export function setUpMockTreasury(cohort: Address, treasury: Address): void {
-  createMockedFunction(cohort, "treasury", "treasury():(address)").returns([
-    ethereum.Value.fromAddress(treasury),
-  ]);
+  createMockedFunction(
+    cohort,
+    "daoTreasury",
+    "daoTreasury():(address)"
+  ).returns([ethereum.Value.fromAddress(treasury)]);
 }
 
-// export function createRoleAdminChangedEvent(
-//   role: Bytes,
-//   previousAdminRole: Bytes,
-//   newAdminRole: Bytes
-// ): RoleAdminChanged {
-//   let roleAdminChangedEvent = changetype<RoleAdminChanged>(newMockEvent());
-
-//   roleAdminChangedEvent.parameters = new Array();
-
-//   roleAdminChangedEvent.parameters.push(
-//     new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
-//   );
-//   roleAdminChangedEvent.parameters.push(
-//     new ethereum.EventParam(
-//       "previousAdminRole",
-//       ethereum.Value.fromFixedBytes(previousAdminRole)
-//     )
-//   );
-//   roleAdminChangedEvent.parameters.push(
-//     new ethereum.EventParam(
-//       "newAdminRole",
-//       ethereum.Value.fromFixedBytes(newAdminRole)
-//     )
-//   );
-
-//   return roleAdminChangedEvent;
-// }
-
-// export function createRoleGrantedEvent(
-//   role: Bytes,
-//   account: Address,
-//   sender: Address
-// ): RoleGranted {
-//   let roleGrantedEvent = changetype<RoleGranted>(newMockEvent());
-
-//   roleGrantedEvent.parameters = new Array();
-
-//   roleGrantedEvent.parameters.push(
-//     new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
-//   );
-//   roleGrantedEvent.parameters.push(
-//     new ethereum.EventParam("account", ethereum.Value.fromAddress(account))
-//   );
-//   roleGrantedEvent.parameters.push(
-//     new ethereum.EventParam("sender", ethereum.Value.fromAddress(sender))
-//   );
-
-//   return roleGrantedEvent;
-// }
-
-// export function createRoleRevokedEvent(
-//   role: Bytes,
-//   account: Address,
-//   sender: Address
-// ): RoleRevoked {
-//   let roleRevokedEvent = changetype<RoleRevoked>(newMockEvent());
-
-//   roleRevokedEvent.parameters = new Array();
-
-//   roleRevokedEvent.parameters.push(
-//     new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
-//   );
-//   roleRevokedEvent.parameters.push(
-//     new ethereum.EventParam("account", ethereum.Value.fromAddress(account))
-//   );
-//   roleRevokedEvent.parameters.push(
-//     new ethereum.EventParam("sender", ethereum.Value.fromAddress(sender))
-//   );
-
-//   return roleRevokedEvent;
-// }
+export function setUpMockName(cohort: Address): void {
+  createMockedFunction(cohort, "cohortName", "cohortName():(string)").returns([
+    ethereum.Value.fromString("Mock cohort"),
+  ]);
+}

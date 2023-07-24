@@ -1,13 +1,13 @@
 import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import {
-  ChangedShares as ChangedSharesEvent,
-  ChangedStake as ChangedStakeEvent,
-  ChangedTime as ChangedTimeEvent,
+  UpdatedShareThreshold,
+  UpdatedMinimumStake,
+  UpdatedStakeDuration,
   Claim as ClaimEvent,
-  Feedback as FeedbackEvent,
-  Initiation as InitiationEvent,
+  Feedback,
+  Initiation,
   Sacrifice as SacrificeEvent,
-} from "../generated/RiteOfMoloch/RiteOfMoloch";
+} from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 import {
   Initiate,
   Sacrifice,
@@ -18,18 +18,20 @@ import {
 } from "../generated/schema";
 import { getCohortId, getInitiateId } from "./utils";
 
-export function handleChangedShares(event: ChangedSharesEvent): void {
+export function handleUpdatedShareThreshold(
+  event: UpdatedShareThreshold
+): void {
   let cohortID = getCohortId(event.address);
   //Load cohort entity
   let cohort = Cohort.load(cohortID);
   if (cohort) {
     //Update data
-    cohort.sharesAmount = event.params.newShare;
+    cohort.shareThreshold = event.params.newShareThreshold;
     cohort.save();
   }
 }
 
-export function handleChangedStake(event: ChangedStakeEvent): void {
+export function handleUpdatedMinimumStake(event: UpdatedMinimumStake): void {
   let cohortID = getCohortId(event.address);
 
   //Load cohort entity
@@ -37,12 +39,12 @@ export function handleChangedStake(event: ChangedStakeEvent): void {
 
   if (cohort) {
     //Update data
-    cohort.tokenAmount = event.params.newStake;
+    cohort.minimumStake = event.params.newMinimumStake;
     cohort.save();
   }
 }
 
-export function handleChangedTime(event: ChangedTimeEvent): void {
+export function handleUpdatedStakeDuration(event: UpdatedStakeDuration): void {
   let cohortID = getCohortId(event.address);
 
   //Load cohort entity
@@ -50,7 +52,7 @@ export function handleChangedTime(event: ChangedTimeEvent): void {
 
   if (cohort) {
     //Update data
-    cohort.time = event.params.newTime;
+    cohort.stakeDuration = event.params.newStakeDuration;
     cohort.save();
   }
 }
@@ -68,7 +70,7 @@ export function handleClaim(event: ClaimEvent): void {
 
   if (initiate) {
     initiate.claimed = true;
-    initiate.stake = BigInt.fromString("0");
+    initiate.stakeAmount = BigInt.fromString("0");
     initiate.save();
   }
 
@@ -103,7 +105,7 @@ export function handleClaim(event: ClaimEvent): void {
   }
 }
 
-export function handleFeedback(event: FeedbackEvent): void {
+export function handleFeedback(event: Feedback): void {
   let cohortID = getCohortId(event.address);
   let initiateID = getInitiateId(event.address, event.params.user);
 
@@ -120,7 +122,7 @@ export function handleFeedback(event: FeedbackEvent): void {
   cryForHelp.save();
 }
 
-export function handleInitiation(event: InitiationEvent): void {
+export function handleInitiation(event: Initiation): void {
   let cohortID = getCohortId(event.address);
   let initiateID = getInitiateId(event.address, event.params.newInitiate);
 
@@ -145,8 +147,8 @@ export function handleInitiation(event: InitiationEvent): void {
 
   initiate.address = event.params.newInitiate;
   initiate.benefactor = event.params.benefactor;
-  initiate.tokenId = event.params.tokenId;
-  initiate.stake = event.params.stake;
+  initiate.sbtId = event.params.tokenId;
+  initiate.stakeAmount = event.params.stake;
   initiate.deadline = event.params.deadline;
   initiate.joinedAt = event.block.timestamp;
   initiate.claimed = false;
@@ -206,7 +208,7 @@ export function handleSacrifice(event: SacrificeEvent): void {
 
   if (initiate) {
     initiate.sacrificed = true;
-    initiate.stake = BigInt.fromI32(0);
+    initiate.stakeAmount = BigInt.fromI32(0);
     initiate.save();
   }
 

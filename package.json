@@ -4,10 +4,11 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bitbeckers/rom-goerli",
-    "create-local": "graph create --node http://localhost:8020/ bitbeckers/rom-goerli",
-    "remove-local": "graph remove --node http://localhost:8020/ bitbeckers/rom-goerli",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bitbeckers/rom-goerli",
+    "deploy:develop": "graph deploy --node https://api.thegraph.com/deploy/ rite-of-moloch/rom-develop",
+    "deploy:gnosis": "graph deploy --node https://api.thegraph.com/deploy/ rite-of-moloch/rom-gnosis",
+    "create-local": "graph create --node http://localhost:8020/ rite-of-moloch/rom-develop",
+    "remove-local": "graph remove --node http://localhost:8020/ rite-of-moloch/rom-develop",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 rite-of-moloch/rom-develop",
     "test": "graph test"
   },
   "dependencies": {

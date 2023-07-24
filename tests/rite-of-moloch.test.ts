@@ -11,12 +11,13 @@ import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
 import {
   DEFAULT_TREASURY_ADDRESS,
   createNewRiteOfMolochEvent,
+  setUpMockName,
   setUpMockTreasury,
 } from "./rite-of-moloch-factory-utils";
 import {
-  createChangedSharesEvent,
-  createChangedStakeEvent,
-  createChangedTimeEvent,
+  createUpdatedShareThresholdEvent,
+  createUpdatedMinimumStakeEvent,
+  createUpdatedStakeDurationEvent,
   createClaimEvent,
   createFeedbackEvent,
   createInitiationEvent,
@@ -25,9 +26,9 @@ import {
   DEFAULT_INITIATE_ADDRESS,
 } from "./rite-of-moloch-utils";
 import {
-  handleChangedShares,
-  handleChangedStake,
-  handleChangedTime,
+  handleUpdatedShareThreshold,
+  handleUpdatedMinimumStake,
+  handleUpdatedStakeDuration,
   handleClaim,
   handleFeedback,
   handleInitiation,
@@ -52,11 +53,11 @@ describe("Cohort staking config and process", () => {
     let stakingAsset = Address.fromString(
       "0x0000000000000000000000000000000000000005"
     );
-    let treasury = Address.fromString(
+    let daoTreasury = Address.fromString(
       "0x0000000000000000000000000000000000000006"
     );
-    let threshold = BigInt.fromI32(123);
-    let assetAmount = BigInt.fromI32(456);
+    let shareThreshold = BigInt.fromI32(123);
+    let minimumStake = BigInt.fromI32(456);
     let stakeDuration = BigInt.fromI32(789);
     let sbtUrl = "https://example.com/";
     let newNewRiteOfMolochEvent = createNewRiteOfMolochEvent(
@@ -65,14 +66,15 @@ describe("Cohort staking config and process", () => {
       implementation,
       membershipCriteria,
       stakingAsset,
-      treasury,
-      threshold,
-      assetAmount,
+      daoTreasury,
+      shareThreshold,
+      minimumStake,
       stakeDuration,
       sbtUrl
     );
 
-    setUpMockTreasury(cohortAddress, treasury);
+    setUpMockTreasury(cohortAddress, daoTreasury);
+    setUpMockName(cohortAddress);
 
     handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
   });
@@ -84,37 +86,46 @@ describe("Cohort staking config and process", () => {
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("Handle changed shares", () => {
+  test("Handle updated shares threshold", () => {
     let cohortID = getCohortId(DEFAULT_COHORT_ADDRESS);
-    assert.fieldEquals("Cohort", cohortID, "sharesAmount", "123");
+    assert.fieldEquals("Cohort", cohortID, "shareThreshold", "123");
 
-    let event = createChangedSharesEvent(BigInt.fromString("1337"));
+    let event = createUpdatedShareThresholdEvent(
+      BigInt.fromString("123"),
+      BigInt.fromString("1337")
+    );
     event.address = DEFAULT_COHORT_ADDRESS;
-    handleChangedShares(event);
+    handleUpdatedShareThreshold(event);
 
-    assert.fieldEquals("Cohort", cohortID, "sharesAmount", "1337");
+    assert.fieldEquals("Cohort", cohortID, "shareThreshold", "1337");
   });
 
-  test("Handle changed stakes", () => {
+  test("Handle changed minimum stake", () => {
     let cohortID = getCohortId(DEFAULT_COHORT_ADDRESS);
-    assert.fieldEquals("Cohort", cohortID, "tokenAmount", "456");
+    assert.fieldEquals("Cohort", cohortID, "minimumStake", "456");
 
-    let event = createChangedStakeEvent(BigInt.fromString("1337"));
+    let event = createUpdatedMinimumStakeEvent(
+      BigInt.fromString("456"),
+      BigInt.fromString("1337")
+    );
     event.address = DEFAULT_COHORT_ADDRESS;
-    handleChangedStake(event);
+    handleUpdatedMinimumStake(event);
 
-    assert.fieldEquals("Cohort", cohortID, "tokenAmount", "1337");
+    assert.fieldEquals("Cohort", cohortID, "minimumStake", "1337");
   });
 
-  test("Handle changed time", () => {
+  test("Handle changed stake duration", () => {
     let cohortID = getCohortId(DEFAULT_COHORT_ADDRESS);
-    assert.fieldEquals("Cohort", cohortID, "time", "789");
+    assert.fieldEquals("Cohort", cohortID, "stakeDuration", "789");
 
-    let event = createChangedTimeEvent(BigInt.fromString("1337"));
+    let event = createUpdatedStakeDurationEvent(
+      BigInt.fromString("789"),
+      BigInt.fromString("1337")
+    );
     event.address = DEFAULT_COHORT_ADDRESS;
-    handleChangedTime(event);
+    handleUpdatedStakeDuration(event);
 
-    assert.fieldEquals("Cohort", cohortID, "time", "1337");
+    assert.fieldEquals("Cohort", cohortID, "stakeDuration", "1337");
   });
 
   test("Handle initiation", () => {
@@ -140,8 +151,8 @@ describe("Cohort staking config and process", () => {
     assert.entityCount("Initiate", 1);
     assert.fieldEquals("Initiate", initiateID, "id", initiateID);
     assert.fieldEquals("Initiate", initiateID, "cohort", cohortID);
-    assert.fieldEquals("Initiate", initiateID, "tokenId", "587");
-    assert.fieldEquals("Initiate", initiateID, "stake", "456");
+    assert.fieldEquals("Initiate", initiateID, "sbtId", "587");
+    assert.fieldEquals("Initiate", initiateID, "stakeAmount", "456");
     assert.fieldEquals("Initiate", initiateID, "deadline", "789");
     assert.fieldEquals("Initiate", initiateID, "claimed", "false");
     assert.fieldEquals("Initiate", initiateID, "sacrificed", "false");
@@ -179,7 +190,7 @@ describe("Cohort staking config and process", () => {
     assert.entityCount("Initiate", 2);
     assert.fieldEquals("Initiate", initiateID, "id", initiateID);
     assert.fieldEquals("Initiate", initiateID, "cohort", cohortID);
-    assert.fieldEquals("Initiate", initiateID, "stake", "0");
+    assert.fieldEquals("Initiate", initiateID, "stakeAmount", "0");
     assert.fieldEquals("Initiate", initiateID, "deadline", "789");
     assert.fieldEquals("Initiate", initiateID, "claimed", "true");
     assert.fieldEquals("Initiate", initiateID, "sacrificed", "false");
@@ -219,7 +230,7 @@ describe("Cohort staking config and process", () => {
     assert.entityCount("Sacrifice", 1);
 
     assert.fieldEquals("Initiate", initiateID, "id", initiateID);
-    assert.fieldEquals("Initiate", initiateID, "stake", "0");
+    assert.fieldEquals("Initiate", initiateID, "stakeAmount", "0");
     assert.fieldEquals("Initiate", initiateID, "claimed", "false");
     assert.fieldEquals("Initiate", initiateID, "sacrificed", "true");
   });

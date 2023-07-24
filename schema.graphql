@@ -2,15 +2,16 @@ type Cohort @entity {
   id: ID!
   address: Bytes! #address
   chain: String! #string
+  name: String! #string
   deployer: Bytes! #address
-  dao: Bytes! #address
-  token: Bytes! #address
-  sbtUrl: String! #string
   implementation: Bytes! #address
-  tokenAmount: BigInt! #uint256
-  sharesAmount: BigInt! #uint256
-  time: BigInt! #uint256 seconds for slash
-  treasury: Bytes! #address
+  dao: Bytes! #address
+  daoTreasury: Bytes! #address
+  shareThreshold: BigInt! #uint256
+  stakeDuration: BigInt! #uint256 seconds for slash
+  stakingToken: Bytes! #address
+  minimumStake: BigInt! #uint256
+  sbtUrl: String! #string
   createdAt: BigInt! #uint256 timestamp of creation
   initiates: [Initiate!] @derivedFrom(field: "cohort")
   criesForHelp: [CryForHelp!] @derivedFrom(field: "cohort")
@@ -27,8 +28,8 @@ type Initiate @entity {
   id: ID! #address + cohort (to support multiple cohorts per same address)
   address: Bytes! #address
   benefactor: Bytes! #address of sponsor (if no sponsor it == id)
-  tokenId: BigInt! #uint256 id of SBT
-  stake: BigInt! #uint256
+  sbtId: BigInt! #uint256 id of SBT
+  stakeAmount: BigInt! #uint256
   deadline: BigInt! #uint256
   joinedAt: BigInt! #uint256 block timestamp when joined
   cohort: Cohort!

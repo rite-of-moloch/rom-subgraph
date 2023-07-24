@@ -3,19 +3,16 @@ import { ethereum, Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   Approval,
   ApprovalForAll,
-  ChangedShares,
-  ChangedStake,
-  ChangedTime,
   Claim,
   Feedback,
   Initialized,
   Initiation,
-  RiteOfMolochRoleAdminChanged,
-  RiteOfMolochRoleGranted,
-  RiteOfMolochRoleRevoked,
   Sacrifice,
   Transfer,
-} from "../generated/RiteOfMoloch/RiteOfMoloch";
+  UpdatedShareThreshold,
+  UpdatedMinimumStake,
+  UpdatedStakeDuration,
+} from "../generated/RiteOfMolochFactory/RiteOfMoloch";
 
 export const DEFAULT_COHORT_ADDRESS = Address.fromString(
   "0x0000000000000000000000000000000000000001"
@@ -72,49 +69,83 @@ export function createApprovalForAllEvent(
   return approvalForAllEvent;
 }
 
-export function createChangedSharesEvent(newShare: BigInt): ChangedShares {
-  let changedSharesEvent = changetype<ChangedShares>(newMockEvent());
+export function createUpdatedShareThresholdEvent(
+  oldShare: BigInt,
+  newShare: BigInt
+): UpdatedShareThreshold {
+  let updatedShareThreshold = changetype<UpdatedShareThreshold>(newMockEvent());
 
-  changedSharesEvent.parameters = new Array();
+  updatedShareThreshold.parameters = new Array();
 
-  changedSharesEvent.parameters.push(
+  updatedShareThreshold.parameters.push(
     new ethereum.EventParam(
-      "newShare",
+      "oldShareThreshold",
+      ethereum.Value.fromUnsignedBigInt(oldShare)
+    )
+  );
+
+  updatedShareThreshold.parameters.push(
+    new ethereum.EventParam(
+      "newShareThreshold",
       ethereum.Value.fromUnsignedBigInt(newShare)
     )
   );
 
-  return changedSharesEvent;
+  return updatedShareThreshold;
 }
 
-export function createChangedStakeEvent(newStake: BigInt): ChangedStake {
-  let changedStakeEvent = changetype<ChangedStake>(newMockEvent());
+export function createUpdatedMinimumStakeEvent(
+  oldMinimumStake: BigInt,
+  newMinimumStake: BigInt
+): UpdatedMinimumStake {
+  let updatedMinimumStakeEvent = changetype<UpdatedMinimumStake>(
+    newMockEvent()
+  );
 
-  changedStakeEvent.parameters = new Array();
+  updatedMinimumStakeEvent.parameters = new Array();
 
-  changedStakeEvent.parameters.push(
+  updatedMinimumStakeEvent.parameters.push(
     new ethereum.EventParam(
-      "newStake",
-      ethereum.Value.fromUnsignedBigInt(newStake)
+      "oldMinimumStake",
+      ethereum.Value.fromUnsignedBigInt(oldMinimumStake)
     )
   );
 
-  return changedStakeEvent;
-}
-
-export function createChangedTimeEvent(newTime: BigInt): ChangedTime {
-  let changedTimeEvent = changetype<ChangedTime>(newMockEvent());
-
-  changedTimeEvent.parameters = new Array();
-
-  changedTimeEvent.parameters.push(
+  updatedMinimumStakeEvent.parameters.push(
     new ethereum.EventParam(
-      "newTime",
-      ethereum.Value.fromUnsignedBigInt(newTime)
+      "newMinimumStake",
+      ethereum.Value.fromUnsignedBigInt(newMinimumStake)
     )
   );
 
-  return changedTimeEvent;
+  return updatedMinimumStakeEvent;
+}
+
+export function createUpdatedStakeDurationEvent(
+  oldStakeDuration: BigInt,
+  newStakeDuration: BigInt
+): UpdatedStakeDuration {
+  let updatedStakeDurationEvent = changetype<UpdatedStakeDuration>(
+    newMockEvent()
+  );
+
+  updatedStakeDurationEvent.parameters = new Array();
+
+  updatedStakeDurationEvent.parameters.push(
+    new ethereum.EventParam(
+      "oldStakeDuration",
+      ethereum.Value.fromUnsignedBigInt(oldStakeDuration)
+    )
+  );
+
+  updatedStakeDurationEvent.parameters.push(
+    new ethereum.EventParam(
+      "newStakeDuration",
+      ethereum.Value.fromUnsignedBigInt(newStakeDuration)
+    )
+  );
+
+  return updatedStakeDurationEvent;
 }
 
 export function createClaimEvent(

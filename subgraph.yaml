@@ -6,9 +6,9 @@ dataSources:
     name: RiteOfMolochFactory
     network: gnosis
     source:
-      address: "0x67A9929392CfA00f8D15ee5c46ca662B174B8dd0" #"0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1"
+      address: "0x9FcbcDA3deCd4A0d6DD7347755762439Aa6c1832"
       abi: RiteOfMolochFactory
-      startBlock: 8659711 #8659712 #(Block-1) the factory was created
+      startBlock: 29109801
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -43,12 +43,12 @@ templates:
         - name: RiteOfMoloch
           file: ./abis/RiteOfMoloch.json
       eventHandlers:
-        - event: ChangedShares(uint256)
-          handler: handleChangedShares
-        - event: ChangedStake(uint256)
-          handler: handleChangedStake
-        - event: ChangedTime(uint256)
-          handler: handleChangedTime
+        - event: UpdatedShareThreshold(uint256,uint256)
+          handler: handleUpdatedShareThreshold
+        - event: UpdatedMinimumStake(uint256,uint256)
+          handler: handleUpdatedMinimumStake
+        - event: UpdatedStakeDuration(uint256,uint256)
+          handler: handleUpdatedStakeDuration
         - event: Claim(address,uint256)
           handler: handleClaim
         - event: Feedback(address,address,string)

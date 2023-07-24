@@ -7,12 +7,11 @@ import {
   afterAll,
 } from "matchstick-as/assembly/index";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import {
-  handleNewRiteOfMoloch,
-} from "../src/rite-of-moloch-factory";
+import { handleNewRiteOfMoloch } from "../src/rite-of-moloch-factory";
 import {
   createNewRiteOfMolochEvent,
   setUpMockTreasury,
+  setUpMockName,
 } from "./rite-of-moloch-factory-utils";
 import { getCohortId } from "../src/utils";
 
@@ -54,6 +53,7 @@ describe("Index cohorts from factory", () => {
     );
 
     setUpMockTreasury(cohortAddress, treasury);
+    setUpMockName(cohortAddress);
 
     handleNewRiteOfMoloch(newNewRiteOfMolochEvent);
   });
@@ -71,6 +71,8 @@ describe("Index cohorts from factory", () => {
       Address.fromString("0x0000000000000000000000000000000000000001")
     );
     assert.fieldEquals("Cohort", cohortID, "id", cohortID);
+    assert.fieldEquals("Cohort", cohortID, "name", "Mock cohort");
+
     assert.fieldEquals(
       "Cohort",
       cohortID,
@@ -92,18 +94,18 @@ describe("Index cohorts from factory", () => {
     assert.fieldEquals(
       "Cohort",
       cohortID,
-      "token",
+      "stakingToken",
       "0x0000000000000000000000000000000000000005"
     );
     assert.fieldEquals(
       "Cohort",
       cohortID,
-      "treasury",
+      "daoTreasury",
       "0x0000000000000000000000000000000000000006"
     );
-    assert.fieldEquals("Cohort", cohortID, "sharesAmount", "123");
-    assert.fieldEquals("Cohort", cohortID, "tokenAmount", "456");
-    assert.fieldEquals("Cohort", cohortID, "time", "789");
+    assert.fieldEquals("Cohort", cohortID, "shareThreshold", "123");
+    assert.fieldEquals("Cohort", cohortID, "minimumStake", "456");
+    assert.fieldEquals("Cohort", cohortID, "stakeDuration", "789");
     assert.fieldEquals("Cohort", cohortID, "sbtUrl", "https://example.com/");
   });
 });
